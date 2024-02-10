@@ -1,0 +1,20 @@
+.bg {
+    -fx-background-color: black;
+}
+
+.paneHeader {
+    -fx-background-color: #366ad1;
+}
+
+.highlight {
+    -fx-background-color: red;
+}
+
+.highlightValue {
+    -fx-background-color: #aa0000;
+}
+
+.highlightValueText {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

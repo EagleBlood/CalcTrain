@@ -9,9 +9,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.Node;
 
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 
@@ -24,24 +30,46 @@ import javafx.scene.control.Alert.AlertType;
 
 public class PrimaryController {
 
+    final double CLASS_FIRST_CLASS = 0.18;
+    final double CLASS_SECOND_CLASS = 0.8;
+    final double CLASS_COUCHETTE = 0.04;
+    final double CLASS_SLEEPING = 0.02;
+    final int PANE_PADDING = 15;
+
+    @FXML
+    private Label arrCount;
+
+    @FXML
+    private Spinner fame;
+
     @FXML
     private VBox input;
 
     @FXML
     private GridPane view1;
 
+    @FXML
+    private GridPane view2;
+
+    @FXML
+    private GridPane view3;
+
+    @FXML
+    private GridPane view4;
+
     private List<TextField[]> textFieldsList = new ArrayList<>();
-    private int hboxCount = 1;
+    private int hboxCount = 0;
 
     @FXML
     public void initialize() {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9, 1);
+        fame.setValueFactory(valueFactory);
+       
         addHBox();
         addHBox();
-    }
 
-    // FIX heigh of hbox with labels
-    // ADD scrolloable functionality inside the gridpane view1
-    // ADD paddings for the gridpane view1
+        arrCount.setText(String.valueOf(hboxCount));
+    }
     
     @FXML
     private void addHBox() {
@@ -68,15 +96,19 @@ public class PrimaryController {
 
         input.getChildren().add(hbox);
         textFieldsList.add(textFields);
+
         hboxCount++;
+        arrCount.setText(String.valueOf(hboxCount));
     }
 
     @FXML
     private void removeHBox() {
-        if (input.getChildren().size() > 2) { // 2 vboxes
+        if (input.getChildren().size() > 3) { // 2 vboxes and sth
+            hboxCount--;
+            arrCount.setText(String.valueOf(hboxCount));
+
             input.getChildren().remove(input.getChildren().size() - 1);
             textFieldsList.remove(textFieldsList.size() - 1);
-            hboxCount--;
         }
     }
 
@@ -102,62 +134,141 @@ public class PrimaryController {
         return values;
     }
 
-    public int sumValues() {
-        List<double[]> values = getValues();
-        if (values == null || values.size() < 2) {
-            System.out.println("Error: At least 2 values are required.");
-            return -1;
-        }
-    
-        double result = 0;
-        int temp = 600000;
-        double temp2 = 1.6;
-        int fame = 3;
-        double variaty = 0.18;
-    
-        // Clear the GridPane
-        view1.getChildren().clear();
-    
-        /*for(int i=0; i < values.size(); i++){
-            System.out.println(i + ": " + Arrays.toString(values.get(i)));
-        }*/
-    
+    public void addLabelsToGrid(GridPane view, List<double[]> values, double classes) {
         for (int i = 0; i < values.size(); i++) {
-            // Add row label
-            view1.add(new Label("Pair " + i), 0, i + 1);
+            // Row label
+            Label rowLabel = new Label(i + "");
+            rowLabel.setMaxWidth(Double.MAX_VALUE);
+            rowLabel.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+            rowLabel.setAlignment(Pos.CENTER);
+
+            StackPane rowPane = new StackPane(rowLabel);
+            rowPane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+            rowPane.getStyleClass().add("paneHeader");
+
+            GridPane.setHalignment(rowPane, HPos.CENTER);
+            GridPane.setValignment(rowPane, VPos.CENTER);
+
+            view.add(rowPane, 0, i + 1);
     
             for (int j = 0; j < values.size(); j++) {
-                // Add column label
+                // Column label
                 if (i == 0) {
-                    view1.add(new Label("Pair " + j), j + 1, 0);
+                    Label columnLabel = new Label(j + "");
+                    columnLabel.setMaxWidth(Double.MAX_VALUE);
+                    columnLabel.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                    columnLabel.setAlignment(Pos.CENTER);
+
+                    StackPane columnPane = new StackPane(columnLabel);
+                    columnPane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+                    columnPane.getStyleClass().add("paneHeader");
+
+                    GridPane.setHalignment(columnPane, HPos.CENTER);
+                    GridPane.setValignment(columnPane, VPos.CENTER);
+
+                    view.add(columnPane, j + 1, 0);
                 }
-    
+
+                // Label   
                 Label label;
+                StackPane pane = new StackPane();
+                pane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+    
                 if (i == j) {
-                    label = new Label("X");
+                    label = new Label("");
+                    pane.getStyleClass().add("bg");
                 } else {
                     double[] A = values.get(i);
                     double[] B = values.get(j);
     
                     if (A.length < 3 || B.length < 3) {
                         System.out.println("Error: Each array should have 3 elements.");
-                        return -1;
+                        return;
                     }
-                    double pairResult = ( ((double)A[1] + B[1]) / temp * ( ((double)B[0] - A[0]) / (B[2] - A[2]) ) * fame * temp2 ) * variaty;
-                    result += pairResult;
-                    //System.out.println("Pair " + i + j + ": " + (int)pairResult);
-
+                    double pairResult = ( ((double)A[1] + B[1]) / 600000 * ( ((double)B[0] - A[0]) / (B[2] - A[2]) ) * (Integer)fame.getValue() * 1.6 ) * classes;
                     String formattedResult = String.valueOf((int)pairResult);
                     label = new Label(formattedResult);
+                    label.setAlignment(Pos.CENTER);
+                    label.setMaxWidth(Double.MAX_VALUE);
+                    label.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
                 }
     
-                // Add the label to the GridPane
-                view1.add(label, j + 1, i + 1);
-            }
-        }
+                pane.getChildren().add(label);
+                GridPane.setHalignment(pane, HPos.CENTER);
+                GridPane.setValignment(pane, VPos.CENTER);
     
-        System.out.println("Result: " + (int)result);
-        return (int)result;
+                // Add the pane to the GridPane
+                view.add(pane, j + 1, i + 1);
+    
+                GridPane.setFillWidth(pane, true);
+                GridPane.setFillHeight(pane, true);
+                
+                
+                // Highlight functionality
+                final int finalI = i;
+                final int finalJ = j;
+    
+                // Add click listener to the pane
+                pane.setOnMouseClicked(event -> {
+                    if (pane.getStyleClass().contains("bg")) {
+                        return;
+                    }
+                    
+                    boolean isHighlighted = pane.getStyleClass().contains("highlight");
+
+                    // Clear previous highlights
+                    view.getChildren().forEach(node -> {
+                        if (node instanceof StackPane) {
+                            StackPane stackPaneNode = (StackPane) node;
+                            stackPaneNode.getStyleClass().remove("highlight");
+                            stackPaneNode.getStyleClass().remove("highlightValue");
+                            if (!stackPaneNode.getChildrenUnmodifiable().isEmpty() && stackPaneNode.getChildrenUnmodifiable().get(0) instanceof Label) {
+                                stackPaneNode.getChildrenUnmodifiable().get(0).getStyleClass().remove("highlightValueText");
+                            }
+                        }
+                    });
+
+                    // If the pane was already highlighted, don't highlight it again
+                    if (isHighlighted) {
+                        return;
+                    }
+
+                    // Highlight the row and column up to the selected cell
+                    for (Node node : view.getChildren()) {
+                        if ((GridPane.getRowIndex(node) <= finalI + 1 && GridPane.getColumnIndex(node) == finalJ + 1) ||
+                            (GridPane.getColumnIndex(node) <= finalJ + 1 && GridPane.getRowIndex(node) == finalI + 1)) {
+                            if (node instanceof StackPane) {
+                                node.getStyleClass().add("highlight");
+                            }
+                        }
+                    }
+
+                    // Highlight the selected cell
+                    pane.getStyleClass().add("highlightValue");
+                    
+                    // Highlighted text style
+                    if (!pane.getChildrenUnmodifiable().isEmpty() && pane.getChildrenUnmodifiable().get(0) instanceof Label) {
+                        pane.getChildrenUnmodifiable().get(0).getStyleClass().add("highlightValueText");
+                    }
+                });
+            }
+    
+        }
+    }
+
+    @FXML
+    public void sumValues() {
+        List<double[]> values = getValues();
+    
+        view1.getChildren().clear();
+        view2.getChildren().clear();
+        view3.getChildren().clear();
+        view4.getChildren().clear();
+    
+        addLabelsToGrid(view1, values, CLASS_FIRST_CLASS);
+        addLabelsToGrid(view2, values, CLASS_SECOND_CLASS);
+        addLabelsToGrid(view3, values, CLASS_COUCHETTE);
+        addLabelsToGrid(view4, values, CLASS_SLEEPING);
     }
     
 }
