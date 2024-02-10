@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="860.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
+   <children>
+      <GridPane fx:id="view" hgap="10.0" layoutX="176.0" prefHeight="668.0" prefWidth="504.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <GridPane fx:id="view1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+            <GridPane fx:id="view2" GridPane.columnIndex="1">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <GridPane fx:id="view3" GridPane.rowIndex="1">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <GridPane fx:id="view4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+         </children>
+      </GridPane>
+      <VBox fx:id="menu" alignment="TOP_CENTER" maxWidth="285.0" prefHeight="700.0" prefWidth="285.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" fillHeight="false" prefHeight="100.0" prefWidth="200.0" spacing="15.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label text="Distance" />
+                  <Label text="Population" />
+                  <Label text="Time" />
+               </children>
+            </HBox>
+            <ScrollPane hbarPolicy="NEVER" prefHeight="749.0" prefWidth="227.0" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="input" alignment="TOP_CENTER" prefHeight="753.0" prefWidth="245.0" spacing="10.0">
+                     <padding>
+                        <Insets bottom="10.0" right="25.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                     <Insets />
+               </VBox.margin>
+            </Separator>
+            <VBox fx:id="buttons" alignment="BOTTOM_CENTER" prefHeight="86.0" prefWidth="245.0" spacing="10.0">
+               <children>
+                  <HBox fx:id="menu_AddSub" alignment="CENTER" prefHeight="22.0" prefWidth="245.0" spacing="20.0" VBox.vgrow="NEVER">
+                     <children>
+                           <Button fx:id="incr" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addHBox" text="+" textAlignment="CENTER" HBox.hgrow="SOMETIMES">
+                              <padding>
+                                 <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                              </padding>
+                              <HBox.margin>
+                                 <Insets />
+                              </HBox.margin>
+                           </Button>
+                           <Label text="2" />
+                           <Button fx:id="decr" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#removeHBox" text="-" textAlignment="CENTER">
+                              <padding>
+                                 <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                              </padding>
+                              <HBox.margin>
+                                 <Insets />
+                              </HBox.margin>
+                           </Button>
+                     </children>
+                  </HBox>
+                  <Button mnemonicParsing="false" onAction="#sumValues" text="Calculate">
+                     <padding>
+                        <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
