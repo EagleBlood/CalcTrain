@@ -19,6 +19,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("primary"), 860, 700);
         stage.setScene(scene);
+        stage.setTitle("Price Calculator");
         stage.show();
     }
 

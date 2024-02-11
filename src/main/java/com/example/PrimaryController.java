@@ -1,9 +1,12 @@
 package com.example;
 
+import com.example.TicketPrice;
 import java.io.IOException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -22,11 +25,15 @@ import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class PrimaryController {
 
@@ -57,20 +64,61 @@ public class PrimaryController {
     @FXML
     private GridPane view4;
 
+    @FXML
+    private GridPane view_tickets1;
+
+    @FXML
+    private GridPane view_tickets2;
+
+    @FXML
+    private GridPane view_tickets3;
+
+    @FXML
+    private GridPane view_tickets4;
+
+
     private List<TextField[]> textFieldsList = new ArrayList<>();
     private int hboxCount = 0;
+    private List<TicketPrice> ticketPrices;
+    private double couchette;
+    private double sleepClass;
 
     @FXML
     public void initialize() {
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9, 1);
-        fame.setValueFactory(valueFactory);
-       
-        addHBox();
-        addHBox();
-
-        arrCount.setText(String.valueOf(hboxCount));
+        if (fame != null) {
+            SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9, 1);
+            fame.setValueFactory(valueFactory);
+        }
+    
+        if (input != null) {
+            addHBox();
+            addHBox();
+            arrCount.setText(String.valueOf(hboxCount));
+        }
     }
     
+    @FXML
+    private void switchToJSONCreator() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("secondary.fxml"));
+
+        Stage stage = null;
+        if (fame != null && fame.getScene() != null) {
+            stage = (Stage) fame.getScene().getWindow();
+        }
+
+        if(this.input != null) {
+            this.input.getChildren();
+        } else {
+            System.out.println("this.input is null");
+        }
+
+        if (stage != null) {
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+    }
+
+
     @FXML
     private void addHBox() {
         HBox hbox = new HBox();
@@ -85,6 +133,7 @@ public class PrimaryController {
         TextField[] textFields = new TextField[3];
         for (int i = 0; i < 3; i++) {
             TextField textField = new TextField();
+            textField.getStyleClass().add("appInputFieldMain");
             textField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.matches("\\d*(\\.\\d*)?")) {
                     textField.setText(newValue.replaceAll("[^\\d.]", ""));
@@ -119,11 +168,10 @@ public class PrimaryController {
             for (int i = 0; i < 3; i++) {
                 String text = textFields[i].getText();
                 if (text == null || text.isEmpty()) {
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Input Error");
-                    alert.setContentText("Please fill all the text fields!");
-                    alert.showAndWait();
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Warning");
+                    alert.setHeaderText(null);
+                    alert.setContentText("All fields must be filled!");
                     return null;
                 }
                 arr[i] = Double.parseDouble(text);
@@ -134,39 +182,98 @@ public class PrimaryController {
         return values;
     }
 
-    public void addLabelsToGrid(GridPane view, List<double[]> values, double classes) {
+    public List<TicketPrice> getValuesAsTicketPrices() {
+        List<TicketPrice> values = new ArrayList<>();
+        try {
+            String content = new String(Files.readAllBytes(Paths.get("output.json")));
+            JSONObject jsonObject = new JSONObject(content);
+
+            couchette = jsonObject.getDouble("couchette");
+            sleepClass = jsonObject.getDouble("sleepClass");
+
+            JSONArray tableData = jsonObject.getJSONArray("tableData");
+            for (int i = 0; i < tableData.length(); i++) {
+                JSONObject data = tableData.getJSONObject(i);
+                double fromStation = data.getDouble("fromStation");
+                double toStation = data.getDouble("toStation");
+                double secondClassPrice = data.getDouble("secondClassPrice");
+                double firstClassPrice = data.getDouble("firstClassPrice");             
+                values.add(new TicketPrice(fromStation, toStation, firstClassPrice, secondClassPrice));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return values;
+    }
+
+    public void addLabelsToGrid(GridPane view, GridPane view_tickets, List<double[]> values, double classes) {
+        TicketPrice matchingTicketPrice = null;
+        ticketPrices = getValuesAsTicketPrices();
+        double finalTicketPrice = 0;
+
         for (int i = 0; i < values.size(); i++) {
-            // Row label
-            Label rowLabel = new Label(i + "");
-            rowLabel.setMaxWidth(Double.MAX_VALUE);
-            rowLabel.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
-            rowLabel.setAlignment(Pos.CENTER);
-
-            StackPane rowPane = new StackPane(rowLabel);
-            rowPane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
-            rowPane.getStyleClass().add("paneHeader");
-
-            GridPane.setHalignment(rowPane, HPos.CENTER);
-            GridPane.setValignment(rowPane, VPos.CENTER);
-
-            view.add(rowPane, 0, i + 1);
+            // Row label for view
+            Label rowLabelView = new Label(i + "");
+            rowLabelView.setMaxWidth(Double.MAX_VALUE);
+            rowLabelView.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+            rowLabelView.setAlignment(Pos.CENTER);
+    
+            StackPane rowPaneView = new StackPane(rowLabelView);
+            rowPaneView.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+            rowPaneView.getStyleClass().add("paneHeader");
+    
+            GridPane.setHalignment(rowPaneView, HPos.CENTER);
+            GridPane.setValignment(rowPaneView, VPos.CENTER);
+    
+            view.add(rowPaneView, 0, i + 1);
+    
+            // Row label for view_tickets
+            Label rowLabelTickets = new Label(i + "");
+            rowLabelTickets.setMaxWidth(Double.MAX_VALUE);
+            rowLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+            rowLabelTickets.setAlignment(Pos.CENTER);
+    
+            StackPane rowPaneTickets = new StackPane(rowLabelTickets);
+            rowPaneTickets.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+            rowPaneTickets.getStyleClass().add("paneHeader");
+    
+            GridPane.setHalignment(rowPaneTickets, HPos.CENTER);
+            GridPane.setValignment(rowPaneTickets, VPos.CENTER);
+    
+            view_tickets.add(rowPaneTickets, 0, i + 1);
     
             for (int j = 0; j < values.size(); j++) {
-                // Column label
+                // Column label for view
                 if (i == 0) {
-                    Label columnLabel = new Label(j + "");
-                    columnLabel.setMaxWidth(Double.MAX_VALUE);
-                    columnLabel.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
-                    columnLabel.setAlignment(Pos.CENTER);
-
-                    StackPane columnPane = new StackPane(columnLabel);
-                    columnPane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
-                    columnPane.getStyleClass().add("paneHeader");
-
-                    GridPane.setHalignment(columnPane, HPos.CENTER);
-                    GridPane.setValignment(columnPane, VPos.CENTER);
-
-                    view.add(columnPane, j + 1, 0);
+                    Label columnLabelView = new Label(j + "");
+                    columnLabelView.setMaxWidth(Double.MAX_VALUE);
+                    columnLabelView.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                    columnLabelView.setAlignment(Pos.CENTER);
+    
+                    StackPane columnPaneView = new StackPane(columnLabelView);
+                    columnPaneView.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+                    columnPaneView.getStyleClass().add("paneHeader");
+    
+                    GridPane.setHalignment(columnPaneView, HPos.CENTER);
+                    GridPane.setValignment(columnPaneView, VPos.CENTER);
+    
+                    view.add(columnPaneView, j + 1, 0);
+    
+                    // Column label for view_tickets
+                    Label columnLabelTickets = new Label(j + "");
+                    columnLabelTickets.setMaxWidth(Double.MAX_VALUE);
+                    columnLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                    columnLabelTickets.setAlignment(Pos.CENTER);
+    
+                    StackPane columnPaneTickets = new StackPane(columnLabelTickets);
+                    columnPaneTickets.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+                    columnPaneTickets.getStyleClass().add("paneHeader");
+    
+                    GridPane.setHalignment(columnPaneTickets, HPos.CENTER);
+                    GridPane.setValignment(columnPaneTickets, VPos.CENTER);
+    
+                    view_tickets.add(columnPaneTickets, j + 1, 0);
                 }
 
                 // Label   
@@ -177,6 +284,15 @@ public class PrimaryController {
                 if (i == j) {
                     label = new Label("");
                     pane.getStyleClass().add("bg");
+
+                    StackPane diagonalPane = new StackPane(label);
+                    diagonalPane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+                    diagonalPane.getStyleClass().add("bg");
+
+                    view_tickets.add(diagonalPane, j + 1, i + 1);
+
+                    GridPane.setFillWidth(diagonalPane, true);
+                    GridPane.setFillHeight(diagonalPane, true);
                 } else {
                     double[] A = values.get(i);
                     double[] B = values.get(j);
@@ -185,14 +301,58 @@ public class PrimaryController {
                         System.out.println("Error: Each array should have 3 elements.");
                         return;
                     }
-                    double pairResult = ( ((double)A[1] + B[1]) / 600000 * ( ((double)B[0] - A[0]) / (B[2] - A[2]) ) * (Integer)fame.getValue() * 1.6 ) * classes;
+                    double distance = (double)B[0] - A[0];
+
+                    for (TicketPrice ticketPrice : ticketPrices) {
+                        if (distance >= ticketPrice.getFromStation() && distance < ticketPrice.getToStation()) {
+                            matchingTicketPrice = ticketPrice;
+                            break;
+                        }
+                    }
+
+                    double pairResult = ( ((double)A[1] + B[1]) / 600000 * ( distance / (B[2] - A[2]) ) * (Integer)fame.getValue() * 1.6 ) * classes;
+
+                    if (matchingTicketPrice != null) {
+                        if (classes == CLASS_FIRST_CLASS) {
+                            finalTicketPrice = pairResult * matchingTicketPrice.getFirstClassPrice();
+                        } else if (classes == CLASS_SECOND_CLASS) {
+                            finalTicketPrice = pairResult * matchingTicketPrice.getSecondClassPrice();
+                        } else if (classes == CLASS_COUCHETTE) {
+                            finalTicketPrice = pairResult * (couchette + matchingTicketPrice.getSecondClassPrice());
+                        } else if (classes == CLASS_SLEEPING) {
+                            finalTicketPrice = pairResult * (sleepClass + matchingTicketPrice.getSecondClassPrice());
+                        } else {
+                            System.out.println("Invalid train class.");
+                        }
+                    
+                        // New label with the value of finalTicketPrice
+                        String formattedTicketPrice = String.format("%.2f", finalTicketPrice);
+                        Label ticketPriceLabel = new Label(formattedTicketPrice);
+                        ticketPriceLabel.setAlignment(Pos.CENTER);
+                        ticketPriceLabel.setMaxWidth(Double.MAX_VALUE);
+                        ticketPriceLabel.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                    
+                        StackPane ticketPricePane = new StackPane(ticketPriceLabel);
+                        ticketPricePane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+                    
+                        view_tickets.add(ticketPricePane, j + 1, i + 1);
+
+                        GridPane.setFillWidth(ticketPricePane, true);
+                        GridPane.setFillHeight(ticketPricePane, true);
+
+                       
+                    } else {
+                        System.out.println("No matching range found for the given distance.");
+                    }
+
                     String formattedResult = String.valueOf((int)pairResult);
                     label = new Label(formattedResult);
                     label.setAlignment(Pos.CENTER);
                     label.setMaxWidth(Double.MAX_VALUE);
                     label.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
                 }
-    
+
+                
                 pane.getChildren().add(label);
                 GridPane.setHalignment(pane, HPos.CENTER);
                 GridPane.setValignment(pane, VPos.CENTER);
@@ -204,11 +364,10 @@ public class PrimaryController {
                 GridPane.setFillHeight(pane, true);
                 
                 
-                // Highlight functionality
+                // Highlight functionality for view
                 final int finalI = i;
                 final int finalJ = j;
     
-                // Add click listener to the pane
                 pane.setOnMouseClicked(event -> {
                     if (pane.getStyleClass().contains("bg")) {
                         return;
@@ -216,7 +375,6 @@ public class PrimaryController {
                     
                     boolean isHighlighted = pane.getStyleClass().contains("highlight");
 
-                    // Clear previous highlights
                     view.getChildren().forEach(node -> {
                         if (node instanceof StackPane) {
                             StackPane stackPaneNode = (StackPane) node;
@@ -228,12 +386,10 @@ public class PrimaryController {
                         }
                     });
 
-                    // If the pane was already highlighted, don't highlight it again
                     if (isHighlighted) {
                         return;
                     }
 
-                    // Highlight the row and column up to the selected cell
                     for (Node node : view.getChildren()) {
                         if ((GridPane.getRowIndex(node) <= finalI + 1 && GridPane.getColumnIndex(node) == finalJ + 1) ||
                             (GridPane.getColumnIndex(node) <= finalJ + 1 && GridPane.getRowIndex(node) == finalI + 1)) {
@@ -243,10 +399,8 @@ public class PrimaryController {
                         }
                     }
 
-                    // Highlight the selected cell
                     pane.getStyleClass().add("highlightValue");
                     
-                    // Highlighted text style
                     if (!pane.getChildrenUnmodifiable().isEmpty() && pane.getChildrenUnmodifiable().get(0) instanceof Label) {
                         pane.getChildrenUnmodifiable().get(0).getStyleClass().add("highlightValueText");
                     }
@@ -264,11 +418,16 @@ public class PrimaryController {
         view2.getChildren().clear();
         view3.getChildren().clear();
         view4.getChildren().clear();
+
+        view_tickets1.getChildren().clear();
+        view_tickets2.getChildren().clear();
+        view_tickets3.getChildren().clear();
+        view_tickets4.getChildren().clear();
     
-        addLabelsToGrid(view1, values, CLASS_FIRST_CLASS);
-        addLabelsToGrid(view2, values, CLASS_SECOND_CLASS);
-        addLabelsToGrid(view3, values, CLASS_COUCHETTE);
-        addLabelsToGrid(view4, values, CLASS_SLEEPING);
+        addLabelsToGrid(view1, view_tickets1, values, CLASS_FIRST_CLASS);
+        addLabelsToGrid(view2, view_tickets2, values, CLASS_SECOND_CLASS);
+        addLabelsToGrid(view3, view_tickets3, values, CLASS_COUCHETTE);
+        addLabelsToGrid(view4, view_tickets4, values, CLASS_SLEEPING);
     }
     
 }

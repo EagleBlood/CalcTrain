@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
@@ -16,22 +15,22 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="860.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
    <children>
-      <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" scaleShape="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
             <VBox fx:id="menu" alignment="TOP_CENTER" maxWidth="285.0" prefHeight="700.0" prefWidth="285.0" spacing="20.0">
                <children>
-                  <ScrollPane hbarPolicy="NEVER" prefHeight="749.0" prefWidth="227.0" VBox.vgrow="ALWAYS">
+                  <ScrollPane fitToHeight="true" hbarPolicy="NEVER" prefHeight="749.0" prefWidth="227.0" styleClass="appTransparent" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="input" alignment="TOP_CENTER" prefHeight="753.0" prefWidth="245.0" spacing="10.0">
+                        <VBox fx:id="input" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="247.0" spacing="10.0" styleClass="appScrollPane">
                            <padding>
-                              <Insets bottom="10.0" right="25.0" top="10.0" />
+                              <Insets bottom="10.0" right="30.0" top="10.0" />
                            </padding>
                            <children>
-                              <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="0.0" prefWidth="146.0" spacing="20.0" VBox.vgrow="NEVER">
+                              <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="0.0" prefWidth="205.0" spacing="17.0" VBox.vgrow="NEVER">
                                  <children>
-                                    <Label text="Distance" />
-                                    <Label text="Population" />
-                                    <Label text="Time" />
+                                    <Label styleClass="appTextField" text="Distance" />
+                                    <Label styleClass="appTextField" text="Population" />
+                                    <Label styleClass="appTextField" text="Time" />
                                  </children>
                                  <VBox.margin>
                                     <Insets right="15.0" />
@@ -44,16 +43,11 @@
                         </VBox>
                      </content>
                   </ScrollPane>
-                  <Separator prefWidth="200.0">
-                     <VBox.margin>
-                           <Insets />
-                     </VBox.margin>
-                  </Separator>
                   <VBox fx:id="buttons" alignment="BOTTOM_CENTER" prefHeight="86.0" prefWidth="245.0" spacing="10.0">
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label text="Fame">
+                              <Label styleClass="appTextField" text="Fame">
                                  <HBox.margin>
                                     <Insets right="10.0" />
                                  </HBox.margin>
@@ -61,9 +55,9 @@
                               <Spinner fx:id="fame" prefHeight="25.0" prefWidth="54.0" />
                            </children>
                         </HBox>
-                        <HBox fx:id="menu_AddSub" alignment="CENTER" prefHeight="22.0" prefWidth="245.0" spacing="20.0" VBox.vgrow="NEVER">
+                        <HBox fx:id="menu_AddSub" alignment="CENTER" prefHeight="22.0" prefWidth="245.0" spacing="6.0" VBox.vgrow="NEVER">
                            <children>
-                                 <Button fx:id="incr" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addHBox" text="+" textAlignment="CENTER" HBox.hgrow="SOMETIMES">
+                                 <Button fx:id="incr" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addHBox" styleClass="appButton" text="+" textAlignment="CENTER" HBox.hgrow="SOMETIMES">
                                     <padding>
                                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                     </padding>
@@ -71,8 +65,12 @@
                                        <Insets />
                                     </HBox.margin>
                                  </Button>
-                                 <Label fx:id="arrCount" text="" />
-                                 <Button fx:id="decr" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#removeHBox" text="-" textAlignment="CENTER">
+                                 <Label fx:id="arrCount" alignment="CENTER" minWidth="20.0" styleClass="appTextField">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                                 <Button fx:id="decr" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#removeHBox" styleClass="appButton" text="-" textAlignment="CENTER">
                                     <padding>
                                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                     </padding>
@@ -82,11 +80,20 @@
                                  </Button>
                            </children>
                         </HBox>
-                        <Button mnemonicParsing="false" onAction="#sumValues" text="Calculate">
-                           <padding>
-                              <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
-                           </padding>
-                        </Button>
+                        <HBox fx:id="menu_AddSub1" alignment="CENTER" prefHeight="22.0" prefWidth="245.0" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#sumValues" prefWidth="130.0" styleClass="appButton" text="Calculate">
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#switchToJSONCreator" prefWidth="130.0" styleClass="appButton" text="Tariff">
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>
@@ -96,49 +103,37 @@
             </VBox>
             <TabPane prefHeight="700.0" prefWidth="558.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="First Class">
+                <Tab styleClass="appTabPane" text="First Class">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <items>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                          <items>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                                <content>
+                                  <AnchorPane>
                                        <children>
-                                          <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <content>
-                                              <AnchorPane>
-                                                   <children>
-                                                      <GridPane fx:id="view1" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                   </children>
-                                                </AnchorPane>
-                                            </content>
-                                          </ScrollPane>
+                                          <GridPane fx:id="view1" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                </content>
+                              </ScrollPane>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                                 <content>
+                                    <AnchorPane>
                                        <children>
-                                          <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <content>
-                                                <AnchorPane>
-                                                   <children>
-                                                      <GridPane fx:id="view_tickets1" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                   </children>
-                                                </AnchorPane>
-                                             </content>
-                                          </ScrollPane>
+                                          <GridPane fx:id="view_tickets1" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
-                                </items>
-                              </SplitPane>
-                           </children>
-                        </AnchorPane>
+                                 </content>
+                              </ScrollPane>
+                          </items>
+                        </SplitPane>
                   </content>
                 </Tab>
-                <Tab text="Second Class">
+                <Tab styleClass="appTabPane" text="Second Class">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                           <items>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                                  <content>
                                     <AnchorPane>
                                        <children>
@@ -147,15 +142,24 @@
                                     </AnchorPane>
                                  </content>
                               </ScrollPane>
-                           </children>
-                        </AnchorPane>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                                 <content>
+                                    <AnchorPane>
+                                       <children>
+                                          <GridPane fx:id="view_tickets2" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </ScrollPane>
+                           </items>
+                        </SplitPane>
                      </content>
                 </Tab>
-                  <Tab text="Couchette Class">
+                  <Tab styleClass="appTabPane" text="Couchette Class">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                           <items>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                                  <content>
                                     <AnchorPane>
                                        <children>
@@ -164,15 +168,24 @@
                                     </AnchorPane>
                                  </content>
                               </ScrollPane>
-                           </children>
-                        </AnchorPane>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                                 <content>
+                                    <AnchorPane>
+                                       <children>
+                                          <GridPane fx:id="view_tickets3" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </ScrollPane>
+                           </items>
+                        </SplitPane>
                      </content>
                   </Tab>
-                  <Tab text="Sleeping Class">
+                  <Tab styleClass="appTabPane" text="Sleeping Class">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                           <items>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                                  <content>
                                     <AnchorPane>
                                        <children>
@@ -181,8 +194,17 @@
                                     </AnchorPane>
                                  </content>
                               </ScrollPane>
-                           </children>
-                        </AnchorPane>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                                 <content>
+                                    <AnchorPane>
+                                       <children>
+                                          <GridPane fx:id="view_tickets4" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </ScrollPane>
+                           </items>
+                        </SplitPane>
                      </content>
                   </Tab>
               </tabs>

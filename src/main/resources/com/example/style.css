@@ -3,7 +3,7 @@
 }
 
 .paneHeader {
-    -fx-background-color: #366ad1;
+    -fx-background-color: #366ad190;
 }
 
 .highlight {
@@ -16,5 +16,139 @@
 
 .highlightValueText {
     -fx-text-fill: white;
+}
+
+.appButton {
+    -fx-background-color: #3a8ab8;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+    -fx-font-size: 15;
+    -fx-padding: 10 10 10 10;
+}
+
+.appButtonSmall {
+    -fx-background-color: #3a8ab8;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-font-size: 15;
+    -fx-padding: 5 10 5 10;
+}
+
+.appButton:hover, .appButtonSmall:hover {
+    -fx-background-color: #3a8ab880;
+    -fx-text-fill: black;
+}
+
+.appTextField {
+    -fx-font-size: 12;
+}
+
+.appTabPane {
+    -fx-background-color: #3a8ab8;
+    -fx-text-base-color: white;
     -fx-font-weight: bold;
+    -fx-background-radius: 15 15 0 0;
+    -fx-padding: 3 8 0 8;
+}
+
+.appTabPane:hover {
+    -fx-background-color: #3a8ab880;
+    -fx-padding: 10 8 0 8;
+}
+
+.appTabPane:selected {
+    -fx-padding: 10 20 0 20;
+}
+
+.appScrollPane {
+    -fx-border-radius: 15 0 0 15;
+    -fx-background-radius: 15 0 0 15;
+    -fx-border-color: #9e9e9e;
+    -fx-background-color: white;
+    -fx-border-width: 1 0 1 1;
+}
+
+.appTransparent {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.appInputField {
+    -fx-background-color: #F4F4F4;
+    -fx-border-color: #9e9e9e;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 0 0 1 0;
+}
+
+.appInputFieldMain {
+    -fx-background-color: white;
+    -fx-border-color: #9e9e9e;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 0 0 1 0;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color: #9e9e9e;
+    -fx-background-radius: 0em;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: #9e9e9e;
+    -fx-border-color: #9e9e9e;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: #9e9e9e;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #e6e6e6;
+    -fx-background-radius: 5em;
+    
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:filled:selected, .table-row-cell:filled:selected:hover {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.table-view{
+    -fx-background-color: white;
+ }
+
+.table-view:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, #3a8ab880;
+    -fx-padding: 0.0em; /* 0 */  
+}
+
+.table-view .column-header {
+    -fx-background-color: #3a8ab8;
+}
+
+.table-view .column-header .text {
+    -fx-fill: white;
+    -fx-font-size: 15;
+    -fx-font-style: normal;
+}
+
+.appBody {
+    -fx-background-color: #F4F4F4;
+}
+
+* {
+    -fx-focus-color: #3a8ab8;
+    -fx-faint-focus-color: transparent;
 }
