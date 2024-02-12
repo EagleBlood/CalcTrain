@@ -2,6 +2,10 @@
     -fx-background-color: black;
 }
 
+.bgWhite {
+    -fx-background-color: white;
+}
+
 .paneHeader {
     -fx-background-color: #366ad190;
 }
@@ -43,6 +47,11 @@
     -fx-font-size: 12;
 }
 
+.appTextFieldBold {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+}
+
 .appTabPane {
     -fx-background-color: #3a8ab8;
     -fx-text-base-color: white;
@@ -71,6 +80,8 @@
 .appTransparent {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
 }
 
 .appInputField {

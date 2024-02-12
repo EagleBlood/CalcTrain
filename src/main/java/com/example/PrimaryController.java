@@ -1,35 +1,27 @@
 package com.example;
 
-import com.example.TicketPrice;
 import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.Scene;
 import javafx.scene.Node;
-
+import javafx.scene.Parent;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.nio.file.Files;
@@ -46,6 +38,7 @@ public class PrimaryController {
     @FXML
     private Label arrCount;
 
+    @SuppressWarnings("rawtypes")
     @FXML
     private Spinner fame;
 
@@ -83,6 +76,7 @@ public class PrimaryController {
     private double couchette;
     private double sleepClass;
 
+    @SuppressWarnings("unchecked")
     @FXML
     public void initialize() {
         if (fame != null) {
@@ -118,21 +112,23 @@ public class PrimaryController {
         }
     }
 
-
     @FXML
     private void addHBox() {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER);
         hbox.setSpacing(10.0);
-
+    
         Label label = new Label(String.valueOf(hboxCount) + ".");
-        label.setMinWidth(25);
-        label.setAlignment(Pos.CENTER);
+        label.setMinWidth(20);
+        label.setAlignment(Pos.CENTER_LEFT);
+        label.getStyleClass().add("appTextFieldBold");
         hbox.getChildren().add(label);
-
+    
+        String[] prompts = {"Dist", "Pop", "Time"};
         TextField[] textFields = new TextField[3];
         for (int i = 0; i < 3; i++) {
             TextField textField = new TextField();
+            textField.setPromptText(prompts[i]); // Set the prompt text
             textField.getStyleClass().add("appInputFieldMain");
             textField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.matches("\\d*(\\.\\d*)?")) {
@@ -142,10 +138,10 @@ public class PrimaryController {
             hbox.getChildren().add(textField);
             textFields[i] = textField;
         }
-
+    
         input.getChildren().add(hbox);
         textFieldsList.add(textFields);
-
+    
         hboxCount++;
         arrCount.setText(String.valueOf(hboxCount));
     }
@@ -207,6 +203,7 @@ public class PrimaryController {
         return values;
     }
 
+    @SuppressWarnings("exports")
     public void addLabelsToGrid(GridPane view, GridPane view_tickets, List<double[]> values, double classes) {
         TicketPrice matchingTicketPrice = null;
         ticketPrices = getValuesAsTicketPrices();
