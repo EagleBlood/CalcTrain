@@ -2,7 +2,7 @@
 
 #### Train Route Demand and Ticket Pricing Calculator
 
-This project is a Java-based application designed to calculate the demand on various train routes and determine the optimal ticket prices. It's built for players of the "Railway Manager" game.
+This project is a Java-based application designed to calculate the demand on various train routes and determine the optimal ticket prices. It's built for players of the "[Railway Manager](https://sites.google.com/view/kolejowe-eg/strona-główna)" game.
 
 The application incorporates various factors such as the number of passengers, route distance, and peak travel times to generate passenger flows for each train route. These passenger flows form the basis for calculating the demand for each route, which is represented in a first matrix. In addition, the application computes the potential revenue a player can generate on each route, which is depicted in a secondary matrix.
 
