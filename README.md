@@ -10,23 +10,23 @@ Furthermore, users have the ability to create a custom tariff for their in-game 
 ## How to use
 First, ensure all necessary data for calculations is provided. If you don't have a valid tariff, you can create one (as shown in Image 4) or use the default 'output.json' file.
 
-![Image1](.\src\img\1.PNG)
+![Image1](src/img/1.PNG)
 
 Once all data has been inputted, click the 'Calculate' button to compute the demand and prices.
 
-![Image2](.\src\img\2.PNG)
+![Image2](src/img/2.PNG)
 
 The resulting two matrices display the calculated demand [person/route] (top) and ticket pricing (bottom) based on the given Distance, Population, and Time. You can highlight any cell in either matrix for easier data reading.
 
-![Image3](.\src\img\3.PNG)
+![Image3](src/img/3.PNG)
 
 Clicking the 'Tariff' button opens a window for creating a valid JSON file with all necessary fields. Here, you can use the 'Add' or 'Remove' buttons to add or remove records from the table. Data in any field can be modified at will. At least one field must be present in the table, and the two inputs below must contain a value for successful JSON creation.
 
-![Image4](.\src\img\4.PNG)
+![Image4](src/img/4.PNG)
 
 After inserting all necessary data, press the 'Create File' button. You will be prompted to choose a name and destination for the new file. Once created, this new file can be used immediately for calculations.
 
-![Image5](.\src\img\5.PNG)
+![Image5](src/img/5.PNG)
 
 ## Prerequisites
 This application is designed to run on Windows operating systems only and does not support cross-platform usage.
