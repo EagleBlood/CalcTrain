@@ -1,6 +1,9 @@
 package com.example;
 
+import java.io.File;
 import java.io.IOException;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -8,7 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
@@ -16,12 +21,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.Scene;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.nio.file.Files;
@@ -69,12 +77,20 @@ public class PrimaryController {
     @FXML
     private GridPane view_tickets4;
 
+    @FXML
+    private Button importButton;
+
+    @FXML
+    private TabPane tabValues;
+
 
     private List<TextField[]> textFieldsList = new ArrayList<>();
     private int hboxCount = 0;
     private List<TicketPrice> ticketPrices;
     private double couchette;
     private double sleepClass;
+    private String filePath = null;
+    private File lastOpenedDirectory = null;
 
     @SuppressWarnings("unchecked")
     @FXML
@@ -95,21 +111,10 @@ public class PrimaryController {
     private void switchToJSONCreator() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("secondary.fxml"));
 
-        Stage stage = null;
-        if (fame != null && fame.getScene() != null) {
-            stage = (Stage) fame.getScene().getWindow();
-        }
-
-        if(this.input != null) {
-            this.input.getChildren();
-        } else {
-            System.out.println("this.input is null");
-        }
-
-        if (stage != null) {
-            stage.setScene(new Scene(root));
-            stage.show();
-        }
+        Stage secondaryStage = new Stage();
+        secondaryStage.setScene(new Scene(root));
+        secondaryStage.initModality(Modality.APPLICATION_MODAL);
+        secondaryStage.showAndWait();
     }
 
     @FXML
@@ -128,7 +133,7 @@ public class PrimaryController {
         TextField[] textFields = new TextField[3];
         for (int i = 0; i < 3; i++) {
             TextField textField = new TextField();
-            textField.setPromptText(prompts[i]); // Set the prompt text
+            textField.setPromptText(prompts[i]);
             textField.getStyleClass().add("appInputFieldMain");
             textField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.matches("\\d*(\\.\\d*)?")) {
@@ -148,7 +153,7 @@ public class PrimaryController {
 
     @FXML
     private void removeHBox() {
-        if (input.getChildren().size() > 3) { // 2 vboxes and sth
+        if (input.getChildren().size() > 2) { // 2 added in init hboxes
             hboxCount--;
             arrCount.setText(String.valueOf(hboxCount));
 
@@ -163,11 +168,7 @@ public class PrimaryController {
             double[] arr = new double[3];
             for (int i = 0; i < 3; i++) {
                 String text = textFields[i].getText();
-                if (text == null || text.isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText(null);
-                    alert.setContentText("All fields must be filled!");
+                if (text.isEmpty()) {
                     return null;
                 }
                 arr[i] = Double.parseDouble(text);
@@ -179,28 +180,68 @@ public class PrimaryController {
     }
 
     public List<TicketPrice> getValuesAsTicketPrices() {
-        List<TicketPrice> values = new ArrayList<>();
-        try {
-            String content = new String(Files.readAllBytes(Paths.get("output.json")));
-            JSONObject jsonObject = new JSONObject(content);
+    List<TicketPrice> values = new ArrayList<>();
+    try {
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+        JSONObject jsonObject = new JSONObject(content);
 
-            couchette = jsonObject.getDouble("couchette");
-            sleepClass = jsonObject.getDouble("sleepClass");
+        couchette = jsonObject.getDouble("couchette");
+        sleepClass = jsonObject.getDouble("sleepClass");
 
-            JSONArray tableData = jsonObject.getJSONArray("tableData");
-            for (int i = 0; i < tableData.length(); i++) {
-                JSONObject data = tableData.getJSONObject(i);
-                double fromStation = data.getDouble("fromStation");
-                double toStation = data.getDouble("toStation");
-                double secondClassPrice = data.getDouble("secondClassPrice");
-                double firstClassPrice = data.getDouble("firstClassPrice");             
-                values.add(new TicketPrice(fromStation, toStation, firstClassPrice, secondClassPrice));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        JSONArray tableData = jsonObject.getJSONArray("tableData");
+        for (int i = 0; i < tableData.length(); i++) {
+            JSONObject data = tableData.getJSONObject(i);
+            double fromStation = data.getDouble("fromStation");
+            double toStation = data.getDouble("toStation");
+            double secondClassPrice = data.getDouble("secondClassPrice");
+            double firstClassPrice = data.getDouble("firstClassPrice");             
+            values.add(new TicketPrice(fromStation, toStation, firstClassPrice, secondClassPrice));
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 
-        return values;
+    return values;
+}
+
+    @FXML
+    private void handleImportButtonAction(ActionEvent event) {
+        filePath = null;
+        getJSONFilePath();
+    }
+
+    private String getJSONFilePath() {       
+        if (filePath != null) {
+            return filePath;
+        }
+    
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+    
+        // Set the initial directory to the last opened directory
+        if (lastOpenedDirectory != null) {
+            fileChooser.setInitialDirectory(lastOpenedDirectory);
+        }
+    
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            // Store the directory of the selected file
+            lastOpenedDirectory = selectedFile.getParentFile();
+    
+            String fileName = selectedFile.getName();
+            importButton.setText(fileName.substring(0, fileName.lastIndexOf('.')));
+            filePath = selectedFile.getPath();
+            return filePath;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText("No File Selected");
+            alert.setContentText("Please select a file before proceeding.");
+            alert.showAndWait();
+            importButton.setText("Import Tariff");
+            return "";
+        }
     }
 
     @SuppressWarnings("exports")
@@ -208,6 +249,7 @@ public class PrimaryController {
         TicketPrice matchingTicketPrice = null;
         ticketPrices = getValuesAsTicketPrices();
         double finalTicketPrice = 0;
+        boolean setErrorMesseage = false;
 
         for (int i = 0; i < values.size(); i++) {
             // Row label for view
@@ -337,9 +379,12 @@ public class PrimaryController {
                         GridPane.setFillWidth(ticketPricePane, true);
                         GridPane.setFillHeight(ticketPricePane, true);
 
+                        highlightPane(view_tickets, ticketPricePane, i, j);
+
                        
-                    } else {
-                        System.out.println("No matching range found for the given distance.");
+                    } else { // TODO - needs a better way of handling price out of range best to not generate whole grid if no matching ticket price found
+                        setErrorMesseage = true;
+                        //System.out.println("No matching ticket price found.");
                     }
 
                     String formattedResult = String.valueOf((int)pairResult);
@@ -349,67 +394,48 @@ public class PrimaryController {
                     label.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
                 }
 
-                
+                if(setErrorMesseage == true)
+                {
+                    view_tickets.getChildren().clear();
+                    view_tickets.add(new Label("No matching ticket price found."), 0, 0);
+                }
+
                 pane.getChildren().add(label);
                 GridPane.setHalignment(pane, HPos.CENTER);
                 GridPane.setValignment(pane, VPos.CENTER);
-    
+        
                 // Add the pane to the GridPane
                 view.add(pane, j + 1, i + 1);
-    
                 GridPane.setFillWidth(pane, true);
                 GridPane.setFillHeight(pane, true);
                 
-                
-                // Highlight functionality for view
-                final int finalI = i;
-                final int finalJ = j;
-    
-                pane.setOnMouseClicked(event -> {
-                    if (pane.getStyleClass().contains("bg")) {
-                        return;
-                    }
-                    
-                    boolean isHighlighted = pane.getStyleClass().contains("highlight");
-
-                    view.getChildren().forEach(node -> {
-                        if (node instanceof StackPane) {
-                            StackPane stackPaneNode = (StackPane) node;
-                            stackPaneNode.getStyleClass().remove("highlight");
-                            stackPaneNode.getStyleClass().remove("highlightValue");
-                            if (!stackPaneNode.getChildrenUnmodifiable().isEmpty() && stackPaneNode.getChildrenUnmodifiable().get(0) instanceof Label) {
-                                stackPaneNode.getChildrenUnmodifiable().get(0).getStyleClass().remove("highlightValueText");
-                            }
-                        }
-                    });
-
-                    if (isHighlighted) {
-                        return;
-                    }
-
-                    for (Node node : view.getChildren()) {
-                        if ((GridPane.getRowIndex(node) <= finalI + 1 && GridPane.getColumnIndex(node) == finalJ + 1) ||
-                            (GridPane.getColumnIndex(node) <= finalJ + 1 && GridPane.getRowIndex(node) == finalI + 1)) {
-                            if (node instanceof StackPane) {
-                                node.getStyleClass().add("highlight");
-                            }
-                        }
-                    }
-
-                    pane.getStyleClass().add("highlightValue");
-                    
-                    if (!pane.getChildrenUnmodifiable().isEmpty() && pane.getChildrenUnmodifiable().get(0) instanceof Label) {
-                        pane.getChildrenUnmodifiable().get(0).getStyleClass().add("highlightValueText");
-                    }
-                });
+                // Highlight the pane when clicked
+                highlightPane(view, pane, i, j);
             }
-    
         }
     }
 
     @FXML
     public void sumValues() {
         List<double[]> values = getValues();
+
+        if (values == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText("No Values");
+            alert.setContentText("Please fill all fields before proceeding.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (importButton.getText().equals("Import Tariff")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText("No Tariff Imported");
+            alert.setContentText("Please import a tariff before proceeding.");
+            alert.showAndWait();
+            return;
+        }
     
         view1.getChildren().clear();
         view2.getChildren().clear();
@@ -425,6 +451,46 @@ public class PrimaryController {
         addLabelsToGrid(view2, view_tickets2, values, CLASS_SECOND_CLASS);
         addLabelsToGrid(view3, view_tickets3, values, CLASS_COUCHETTE);
         addLabelsToGrid(view4, view_tickets4, values, CLASS_SLEEPING);
+    }
+
+    private void highlightPane(GridPane view, StackPane pane, int i, int j) {
+        pane.setOnMouseClicked(event -> {
+            if (pane.getStyleClass().contains("bg")) {
+                return;
+            }
+    
+            boolean isHighlighted = pane.getStyleClass().contains("highlight");
+    
+            view.getChildren().forEach(node -> {
+                if (node instanceof StackPane) {
+                    StackPane stackPaneNode = (StackPane) node;
+                    stackPaneNode.getStyleClass().remove("highlight");
+                    stackPaneNode.getStyleClass().remove("highlightValue");
+                    if (!stackPaneNode.getChildrenUnmodifiable().isEmpty() && stackPaneNode.getChildrenUnmodifiable().get(0) instanceof Label) {
+                        stackPaneNode.getChildrenUnmodifiable().get(0).getStyleClass().remove("highlightValueText");
+                    }
+                }
+            });
+    
+            if (isHighlighted) {
+                return;
+            }
+    
+            for (Node node : view.getChildren()) {
+                if ((GridPane.getRowIndex(node) <= i + 1 && GridPane.getColumnIndex(node) == j + 1) ||
+                    (GridPane.getColumnIndex(node) <= j + 1 && GridPane.getRowIndex(node) == i + 1)) {
+                    if (node instanceof StackPane) {
+                        node.getStyleClass().add("highlight");
+                    }
+                }
+            }
+    
+            pane.getStyleClass().add("highlightValue");
+    
+            if (!pane.getChildrenUnmodifiable().isEmpty() && pane.getChildrenUnmodifiable().get(0) instanceof Label) {
+                pane.getChildrenUnmodifiable().get(0).getStyleClass().add("highlightValueText");
+            }
+        });
     }
     
 }

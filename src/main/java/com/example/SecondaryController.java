@@ -1,15 +1,16 @@
 package com.example;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.Scene;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.nio.file.Files;
@@ -21,10 +22,10 @@ public class SecondaryController {
     private TableView<TicketPrice> table;
 
     @FXML
-    private TableColumn<TicketPrice, String> fromColumn;
+    private TableColumn<TicketPrice, Double> fromColumn;
 
     @FXML
-    private TableColumn<TicketPrice, String> toColumn;
+    private TableColumn<TicketPrice, Double> toColumn;
 
     @FXML
     private TableColumn<TicketPrice, Double> firstClassColumn;
@@ -52,11 +53,38 @@ public class SecondaryController {
 
     @FXML
     public void initialize() {
-        // Set the cell value factories
+        
+        table.setEditable(true);
+
         fromColumn.setCellValueFactory(new PropertyValueFactory<>("fromStation"));
         toColumn.setCellValueFactory(new PropertyValueFactory<>("toStation"));
         firstClassColumn.setCellValueFactory(new PropertyValueFactory<>("firstClassPrice"));
         secClassColumn.setCellValueFactory(new PropertyValueFactory<>("secondClassPrice"));
+
+        fromColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        toColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        firstClassColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        secClassColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
+        fromColumn.setOnEditCommit(event -> {
+            TicketPrice ticket = event.getRowValue();
+            ticket.setFromStation(event.getNewValue());
+        });
+
+        toColumn.setOnEditCommit(event -> {
+            TicketPrice ticket = event.getRowValue();
+            ticket.setToStation(event.getNewValue());
+        });
+
+        firstClassColumn.setOnEditCommit(event -> {
+            TicketPrice ticket = event.getRowValue();
+            ticket.setFirstClassPrice(event.getNewValue());
+        });
+
+        secClassColumn.setOnEditCommit(event -> {
+            TicketPrice ticket = event.getRowValue();
+            ticket.setSecondClassPrice(event.getNewValue());
+        });
     }
 
     @FXML
@@ -99,58 +127,58 @@ public class SecondaryController {
 
     @FXML
     public void cancelAndReturn() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/primary.fxml"));
-            Scene primaryScene = new Scene(loader.load());
-
-            Stage stage = (Stage) table.getScene().getWindow();
-
-            stage.setScene(primaryScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Stage stage = (Stage) table.getScene().getWindow();
+        stage.close();
     }
 
-   @FXML
-public void createJsonFile() {
-    JSONObject jsonObject = new JSONObject();
-    JSONArray jsonArray = new JSONArray();
-
-    for (TicketPrice ticket : table.getItems()) {
-        JSONObject ticketObject = new JSONObject();
-        ticketObject.put("fromStation", ticket.getFromStation());
-        ticketObject.put("toStation", ticket.getToStation());
-        ticketObject.put("firstClassPrice", ticket.getFirstClassPrice());
-        ticketObject.put("secondClassPrice", ticket.getSecondClassPrice());
-
-        jsonArray.put(ticketObject);
-    }
-
-    jsonObject.put("tableData", jsonArray);
-    jsonObject.put("couchette", inputCouchette.getText());
-    jsonObject.put("sleepClass", inputSleepClass.getText());
-
-    // Create a FileChooser
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save as");
-    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-    File selectedFile = fileChooser.showSaveDialog(null);
-
-    if (selectedFile != null) {
-        try {
-            Files.write(selectedFile.toPath(), jsonObject.toString().getBytes());
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
+    @FXML
+    public void createJsonFile() {
+        if (table.getItems().isEmpty() || inputCouchette.getText().isEmpty() || inputSleepClass.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
             alert.setHeaderText(null);
-            alert.setContentText("JSON file created successfully!");
-
+            alert.setContentText("Please ensure at least one record is present and both inputs below are filled.");
             alert.showAndWait();
-
-            cancelAndReturn();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return;
+        }
+    
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+    
+        for (TicketPrice ticket : table.getItems()) {
+            JSONObject ticketObject = new JSONObject();
+            ticketObject.put("fromStation", ticket.getFromStation());
+            ticketObject.put("toStation", ticket.getToStation());
+            ticketObject.put("firstClassPrice", ticket.getFirstClassPrice());
+            ticketObject.put("secondClassPrice", ticket.getSecondClassPrice());
+    
+            jsonArray.put(ticketObject);
+        }
+    
+        jsonObject.put("tableData", jsonArray);
+        jsonObject.put("couchette", inputCouchette.getText());
+        jsonObject.put("sleepClass", inputSleepClass.getText());
+    
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save as");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File selectedFile = fileChooser.showSaveDialog(null);
+    
+        if (selectedFile != null) {
+            try {
+                Files.write(selectedFile.toPath(), jsonObject.toString().getBytes());
+    
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("JSON file created successfully!");
+    
+                alert.showAndWait();
+    
+                cancelAndReturn();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-}
 }

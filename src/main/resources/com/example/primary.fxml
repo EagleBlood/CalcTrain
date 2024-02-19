@@ -33,16 +33,6 @@
                   </ScrollPane>
                   <VBox fx:id="buttons" alignment="BOTTOM_CENTER" prefHeight="86.0" prefWidth="245.0" spacing="10.0">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <Label styleClass="appTextField" text="Fame">
-                                 <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <Spinner fx:id="fame" prefHeight="25.0" prefWidth="54.0" />
-                           </children>
-                        </HBox>
                         <HBox fx:id="menu_AddSub" alignment="CENTER" prefHeight="22.0" prefWidth="245.0" spacing="6.0" VBox.vgrow="ALWAYS">
                            <children>
                                  <Button fx:id="incr" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addHBox" prefWidth="40.0" styleClass="appButton" text="+" textAlignment="CENTER" HBox.hgrow="SOMETIMES">
@@ -60,6 +50,17 @@
                                        <Insets />
                                     </HBox.margin>
                                  </Button>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <HBox alignment="CENTER" spacing="5.0">
+                                 <children>
+                                    <Label styleClass="appTextField" text="Fame" />
+                                    <Spinner fx:id="fame" prefHeight="25.0" prefWidth="54.0" />
+                                 </children>
+                              </HBox>
+                              <Button fx:id="importButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleImportButtonAction" styleClass="appButton" text="Import Tariff" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <HBox fx:id="menu_AddSub1" alignment="CENTER" prefHeight="22.0" prefWidth="245.0" spacing="10.0">
@@ -83,7 +84,7 @@
                   <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
                </padding>
             </VBox>
-            <TabPane prefHeight="700.0" prefWidth="558.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tabValues" prefHeight="700.0" prefWidth="558.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab styleClass="appTabPane" text="First Class">
                   <content>
