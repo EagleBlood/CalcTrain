@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="860.0" styleClass="appBody" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SecondaryController">
+<AnchorPane fx:id="mainView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="860.0" styleClass="appBody" stylesheets="@styleDark.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SecondaryController">
    <children>
       <VBox prefHeight="700.0" prefWidth="860.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -53,7 +53,8 @@
             </VBox>
             <HBox alignment="CENTER" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#createJsonFile" styleClass="appButton" text="Create File" />
+                  <Button fx:id="mainButton" mnemonicParsing="false" onAction="#createJsonFile" styleClass="appButton" text="Create File" />
+                  <Button mnemonicParsing="false" onAction="#importJsonFile" styleClass="appButton" text="Import" />
                   <Button mnemonicParsing="false" onAction="#cancelAndReturn" styleClass="appButton" text="Cancel" />
                </children>
             </HBox>

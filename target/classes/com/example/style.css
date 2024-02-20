@@ -163,3 +163,141 @@
     -fx-focus-color: #3a8ab8;
     -fx-faint-focus-color: transparent;
 }
+
+.icon-buttonHide {
+    -icon-paint: black;
+    -fx-content-display: graphic-only;
+    -fx-background-color: white;
+}
+
+.icon-buttonHide:hover {
+    -fx-background-color: #3a8ab880;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonHide .iconHide {
+    -fx-background-color: -icon-paint;
+    -size: 16;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M14.78 2.28a.75.75 0 0 0-1.06-1.06L10.5 4.44V2.75a.75.75 0 0 0-1.5 0V7h4.25a.75.75 0 0 0 0-1.5h-1.69zM5.5 11.56v1.69a.75.75 0 0 0 1.5 0V9H2.75a.75.75 0 0 0 0 1.5h1.69l-3.22 3.22a.75.75 0 1 0 1.06 1.06z";
+}
+
+.icon-buttonMinimize {
+    -icon-paint: black;
+    -fx-content-display: graphic-only;
+    -fx-background-color: white;
+}
+
+.icon-buttonMinimize:hover {
+    -fx-background-color: #3a8ab880;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonMinimize .iconMinimize {
+    -fx-background-color: -icon-paint;
+    -size: 16;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M8 18q-.825 0-1.412-.587T6 16V4q0-.825.588-1.412T8 2h12q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm0-2h12V4H8zm-4 6q-.825 0-1.412-.587T2 20V6h2v14h14v2zM8 4v12z";
+}
+
+
+.icon-buttonEnlarge {
+    -icon-paint: black;
+    -fx-content-display: graphic-only;
+    -fx-background-color: white;
+}
+
+.icon-buttonEnlarge:hover {
+    -fx-background-color: #3a8ab880;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonEnlarge .iconEnlarge {
+    -fx-background-color: -icon-paint;
+    -size: 16;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m0 176H48V48h160z";
+}
+
+
+.icon-buttonExit {
+    -icon-paint: black;
+    -fx-content-display: graphic-only;
+    -fx-background-color: white;
+}
+
+.icon-buttonExit:hover {
+    -fx-background-color: #3a8ab880;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonExit .iconExit {
+    -fx-background-color: -icon-paint;
+    -size: 16;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z";
+}
+
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-padding: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #cccccc;
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.2) , 6, 0.0 , 0 , 0);
+}
+
+.menu-item:hover, .menu-item:focused {
+    -fx-background-color: #3a8ab880;
+}
+.menu-item > .graphic-container {
+    -fx-padding: 0em 0.333em 0em 0em;
+}
+
+.menu-item >.label {
+    -fx-background-color:transparent;
+    -fx-padding: 0.2em 0.1em 0.2em 0.1em;
+    -fx-text-fill: #333333;
+    -fx-effect: null;
+    -fx-font-size: 13;
+    /*-fx-font-family: 'Open Sans';*/
+}
+.menu-item:focused > .label {
+    -fx-text-fill: #333333;
+}
+.menu-bar {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.menu-bar .menu {
+    -fx-padding: 5 20;
+    -fx-background-color: transparent;
+}
+
+.menu-bar .text {
+    -fx-fill: #333333;
+    -fx-font-size: 13;
+}
+
+.menu-bar .menu-button:hover, .menu-bar .menu-button:focused {
+    -fx-background-color: #3a8ab880;
+}
+
+.menu-bar .menu:hover, .menu-bar .menu:showing {
+    -fx-background-color: #3a8ab880;
+}

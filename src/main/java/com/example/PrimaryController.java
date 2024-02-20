@@ -2,20 +2,29 @@ package com.example;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.Scene;
@@ -83,6 +92,42 @@ public class PrimaryController {
     @FXML
     private TabPane tabValues;
 
+    @FXML
+    private VBox menu;
+
+    @FXML
+    private SplitPane splitPane;
+
+    @FXML
+    private MenuBar menuBar;
+
+    @FXML
+    private MenuItem clearMenuButton;
+
+    @FXML
+    private MenuItem hideMenuSwitch;
+
+    @FXML
+    private MenuItem themeMenuSwitch;
+
+    @FXML
+    private MenuItem exitMenuButton;
+
+    @FXML
+    private MenuItem aboutMenuButton;
+
+    @FXML
+    private AnchorPane mainView;
+
+    @FXML
+    private Button buttonIconEnlarge;
+
+    @FXML
+    private Region regionIconEnlarge;
+
+    @FXML
+    private HBox wholeMenuBar;
+
 
     private List<TextField[]> textFieldsList = new ArrayList<>();
     private int hboxCount = 0;
@@ -91,6 +136,10 @@ public class PrimaryController {
     private double sleepClass;
     private String filePath = null;
     private File lastOpenedDirectory = null;
+    private boolean isMaximized = false;
+    public static String currentTheme = "styleDark.css";
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     @SuppressWarnings("unchecked")
     @FXML
@@ -105,13 +154,33 @@ public class PrimaryController {
             addHBox();
             arrCount.setText(String.valueOf(hboxCount));
         }
+
+        // make window draggable
+        wholeMenuBar.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        wholeMenuBar.setOnMouseDragged(event -> {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
     }
     
     @FXML
     private void switchToJSONCreator() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("secondary.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("secondary.fxml"));
+        Parent root = loader.load();
+
+        SecondaryController secondaryController = loader.getController();
+
+        AnchorPane secondaryView = secondaryController.getAnchorPane();
+        secondaryView.getStylesheets().add(PrimaryController.currentTheme);
 
         Stage secondaryStage = new Stage();
+        //secondaryStage.initStyle(StageStyle.UNDECORATED);
+        secondaryStage.setTitle("Create Tariff");
         secondaryStage.setScene(new Scene(root));
         secondaryStage.initModality(Modality.APPLICATION_MODAL);
         secondaryStage.showAndWait();
@@ -238,6 +307,7 @@ public class PrimaryController {
             alert.setTitle("Warning Dialog");
             alert.setHeaderText("No File Selected");
             alert.setContentText("Please select a file before proceeding.");
+            
             alert.showAndWait();
             importButton.setText("Import Tariff");
             return "";
@@ -257,6 +327,7 @@ public class PrimaryController {
             rowLabelView.setMaxWidth(Double.MAX_VALUE);
             rowLabelView.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
             rowLabelView.setAlignment(Pos.CENTER);
+            rowLabelView.getStyleClass().add("paneHeaderText");
     
             StackPane rowPaneView = new StackPane(rowLabelView);
             rowPaneView.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
@@ -272,6 +343,7 @@ public class PrimaryController {
             rowLabelTickets.setMaxWidth(Double.MAX_VALUE);
             rowLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
             rowLabelTickets.setAlignment(Pos.CENTER);
+            rowLabelTickets.getStyleClass().add("paneHeaderText");
     
             StackPane rowPaneTickets = new StackPane(rowLabelTickets);
             rowPaneTickets.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
@@ -289,6 +361,7 @@ public class PrimaryController {
                     columnLabelView.setMaxWidth(Double.MAX_VALUE);
                     columnLabelView.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
                     columnLabelView.setAlignment(Pos.CENTER);
+                    columnLabelView.getStyleClass().add("paneHeaderText");
     
                     StackPane columnPaneView = new StackPane(columnLabelView);
                     columnPaneView.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
@@ -304,6 +377,7 @@ public class PrimaryController {
                     columnLabelTickets.setMaxWidth(Double.MAX_VALUE);
                     columnLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
                     columnLabelTickets.setAlignment(Pos.CENTER);
+                    columnLabelTickets.getStyleClass().add("paneHeaderText");
     
                     StackPane columnPaneTickets = new StackPane(columnLabelTickets);
                     columnPaneTickets.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
@@ -370,6 +444,7 @@ public class PrimaryController {
                         ticketPriceLabel.setAlignment(Pos.CENTER);
                         ticketPriceLabel.setMaxWidth(Double.MAX_VALUE);
                         ticketPriceLabel.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                        ticketPriceLabel.getStyleClass().add("appTextField");
                     
                         StackPane ticketPricePane = new StackPane(ticketPriceLabel);
                         ticketPricePane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
@@ -392,6 +467,7 @@ public class PrimaryController {
                     label.setAlignment(Pos.CENTER);
                     label.setMaxWidth(Double.MAX_VALUE);
                     label.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                    label.getStyleClass().add("appTextField");
                 }
 
                 if(setErrorMesseage == true)
@@ -424,6 +500,9 @@ public class PrimaryController {
             alert.setTitle("Warning Dialog");
             alert.setHeaderText("No Values");
             alert.setContentText("Please fill all fields before proceeding.");
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.getStyleClass().add("dialog-pane");
+
             alert.showAndWait();
             return;
         }
@@ -492,5 +571,103 @@ public class PrimaryController {
             }
         });
     }
-    
+
+    // Menu items
+
+    @FXML // More functions later
+    private void handleClearMenuButtonAction(ActionEvent event) {
+        input.getChildren().clear();
+        hboxCount = 0;
+        addHBox();
+        addHBox();
+        arrCount.setText(String.valueOf(hboxCount));
+    }
+
+    @FXML
+    private void handleHideMenuSwitchAction(ActionEvent event) {
+        if (menu.isVisible()) {
+            menu.setVisible(false);
+            menu.setManaged(false);
+            splitPane.setDividerPositions(0);
+        } else {
+            menu.setVisible(true);
+            menu.setManaged(true);
+            splitPane.setDividerPositions(0.4);
+        }
+    }
+
+    @FXML
+    private void handleThemeMenuSwitchAction(ActionEvent event) {
+        URL darkStyle = getClass().getResource("styleDark.css");
+        URL lightStyle = getClass().getResource("style.css");
+
+        if (darkStyle == null || lightStyle == null) {
+            System.out.println("Could not find one or both of the stylesheets");
+            return;
+        }
+
+        String darkStyleExternalForm = darkStyle.toExternalForm();
+        String lightStyleExternalForm = lightStyle.toExternalForm();
+
+        if (mainView.getStylesheets().contains(darkStyleExternalForm)) {
+            mainView.getStylesheets().remove(darkStyleExternalForm);
+            mainView.getStylesheets().add(lightStyleExternalForm);
+            currentTheme = lightStyleExternalForm;
+        } else {
+            mainView.getStylesheets().remove(lightStyleExternalForm);
+            mainView.getStylesheets().add(darkStyleExternalForm);
+            currentTheme = darkStyleExternalForm;
+        }
+    }
+
+    @FXML
+    private void handleExitMenuButtonAction(ActionEvent event) {
+        Stage stage = (Stage) mainView.getScene().getWindow();
+        stage.close();
+    }
+
+   @FXML
+    private void handleAboutMenuButtonAction(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About");
+        alert.setHeaderText("Price Calculator");
+
+        Hyperlink hyperlink = new Hyperlink();
+        hyperlink.setText("https://github.com/EagleBlood/CalcTrain");
+        hyperlink.setOnAction(e -> {
+            Application application = new Application() {
+                @Override
+                public void start(Stage stage) throws Exception {
+                    // This is a no-op. We only need the Application for HostServices.
+                }
+            };
+            application.getHostServices().showDocument(hyperlink.getText());
+        });
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStyleClass().add("dialog-pane");
+        dialogPane.setContent(hyperlink);
+
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleMinimizeButtonAction(ActionEvent event) {
+        Stage stage = (Stage) mainView.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+    @FXML
+    private void handleMaximizeButtonAction(ActionEvent event) {
+        Stage stage = (Stage) mainView.getScene().getWindow();
+        if (isMaximized) {
+            // Restore to windowed mode
+            stage.setFullScreen(false);
+            isMaximized = false;
+        } else {
+            // Maximize the window
+            stage.setFullScreen(true);
+            isMaximized = true;
+        }
+    }
 }

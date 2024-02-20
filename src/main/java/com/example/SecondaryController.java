@@ -2,11 +2,13 @@ package com.example;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
@@ -52,8 +54,13 @@ public class SecondaryController {
     private TextField inputSleepClass;
 
     @FXML
+    private Button mainButton;
+
+    @FXML
+    private AnchorPane mainView;
+
+    @FXML
     public void initialize() {
-        
         table.setEditable(true);
 
         fromColumn.setCellValueFactory(new PropertyValueFactory<>("fromStation"));
@@ -61,10 +68,60 @@ public class SecondaryController {
         firstClassColumn.setCellValueFactory(new PropertyValueFactory<>("firstClassPrice"));
         secClassColumn.setCellValueFactory(new PropertyValueFactory<>("secondClassPrice"));
 
-        fromColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        toColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        firstClassColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        secClassColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        fromColumn.setCellFactory(column -> {
+            TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
+            cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
+                if (isNowEditing) {
+                    // Add the 'editing' style class when the cell enters editing mode
+                    cell.getStyleClass().add("editing");
+                } else {
+                    // Remove the 'editing' style class when the cell exits editing mode
+                    cell.getStyleClass().remove("editing");
+                }
+            });
+            return cell;
+        });
+        toColumn.setCellFactory(column -> {
+            TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
+            cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
+                if (isNowEditing) {
+                    // Add the 'editing' style class when the cell enters editing mode
+                    cell.getStyleClass().add("editing");
+                } else {
+                    // Remove the 'editing' style class when the cell exits editing mode
+                    cell.getStyleClass().remove("editing");
+                }
+            });
+            return cell;
+        });
+        
+        firstClassColumn.setCellFactory(column -> {
+            TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
+            cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
+                if (isNowEditing) {
+                    // Add the 'editing' style class when the cell enters editing mode
+                    cell.getStyleClass().add("editing");
+                } else {
+                    // Remove the 'editing' style class when the cell exits editing mode
+                    cell.getStyleClass().remove("editing");
+                }
+            });
+            return cell;
+        });
+        
+        secClassColumn.setCellFactory(column -> {
+            TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
+            cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
+                if (isNowEditing) {
+                    // Add the 'editing' style class when the cell enters editing mode
+                    cell.getStyleClass().add("editing");
+                } else {
+                    // Remove the 'editing' style class when the cell exits editing mode
+                    cell.getStyleClass().remove("editing");
+                }
+            });
+            return cell;
+        });
 
         fromColumn.setOnEditCommit(event -> {
             TicketPrice ticket = event.getRowValue();
@@ -180,5 +237,45 @@ public class SecondaryController {
                 e.printStackTrace();
             }
         }
+    }
+
+    @FXML
+    public void importJsonFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open JSON File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            try {
+                String content = new String(Files.readAllBytes(selectedFile.toPath()));
+                JSONObject jsonObject = new JSONObject(content);
+
+                table.getItems().clear();
+
+                JSONArray jsonArray = jsonObject.getJSONArray("tableData");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject ticketObject = jsonArray.getJSONObject(i);
+                    TicketPrice ticket = new TicketPrice(
+                        ticketObject.getDouble("fromStation"),
+                        ticketObject.getDouble("toStation"),
+                        ticketObject.getDouble("firstClassPrice"),
+                        ticketObject.getDouble("secondClassPrice")
+                    );
+                    table.getItems().add(ticket);
+                }
+
+                inputCouchette.setText(jsonObject.getString("couchette"));
+                inputSleepClass.setText(jsonObject.getString("sleepClass"));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @SuppressWarnings("exports")
+    public AnchorPane getAnchorPane() {
+        return mainView;
     }
 }
