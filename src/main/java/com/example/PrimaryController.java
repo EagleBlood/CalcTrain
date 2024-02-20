@@ -149,8 +149,9 @@ public class PrimaryController {
      * TODO - change the icon when window is enlarged
      * TODO - change the icon of minimize button
      * TODO - fix the lightmode styling
-     * FIX - after clean option from menu was clicked, calculation is not working, saying no values are present
+     * FIX - after clean option from menu was clicked, calculation is not working, saying no values are present NOT ALWAYS
      * FIX - when No matching ticket price found, the text in bearly visible
+     * FIX - clean function should clean grinds aswell, currently it adds new cells on top of the old ones
     */
 
     @SuppressWarnings("unchecked")
