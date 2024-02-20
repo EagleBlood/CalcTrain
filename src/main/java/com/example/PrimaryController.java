@@ -141,6 +141,16 @@ public class PrimaryController {
     private double xOffset = 0;
     private double yOffset = 0;
 
+    /* TODO - refractor all aletrs to a global class
+     * TODO - style the alert boxes
+     * TODO - add a progress bar / circle to show the progress of the calculation
+     * TODO - add a icon
+     * TODO - add a splash screen
+     * TODO - change the icon when window is enlarged
+     * TODO - change the icon of minimize button
+     * TODO - fix the lightmode styling
+    */
+
     @SuppressWarnings("unchecked")
     @FXML
     public void initialize() {
