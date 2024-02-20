@@ -149,6 +149,7 @@ public class PrimaryController {
      * TODO - change the icon when window is enlarged
      * TODO - change the icon of minimize button
      * TODO - fix the lightmode styling
+     * FIX - after clean option from menu was clicked, calculation is not working, saying no values are present
     */
 
     @SuppressWarnings("unchecked")
