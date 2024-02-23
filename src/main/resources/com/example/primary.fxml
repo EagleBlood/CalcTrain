@@ -44,7 +44,7 @@
                       </Menu>
                     </menus>
                   </MenuBar>
-                  <HBox alignment="TOP_RIGHT" styleClass="bgWhite" HBox.hgrow="ALWAYS">
+                  <HBox alignment="TOP_RIGHT" styleClass="appBody" HBox.hgrow="ALWAYS">
                      <children>
                         <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleMinimizeButtonAction" styleClass="icon-buttonMinimize">
                            <graphic>
@@ -65,13 +65,13 @@
                   </HBox>
                </children>
             </HBox>
-            <SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" scaleShape="false" styleClass="bgWhite" VBox.vgrow="ALWAYS">
+            <SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" scaleShape="false" styleClass="appBody" VBox.vgrow="ALWAYS">
                <items>
                   <VBox fx:id="menu" alignment="TOP_CENTER" maxWidth="285.0" prefHeight="700.0" prefWidth="285.0" spacing="20.0">
                      <children>
                         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="749.0" prefWidth="227.0" styleClass="appTransparent" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
                            <content>
-                              <VBox fx:id="input" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="247.0" spacing="10.0" styleClass="bgWhite">
+                              <VBox fx:id="input" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="247.0" spacing="10.0" styleClass="appBody">
                                  <padding>
                                     <Insets right="20.0" />
                                  </padding>

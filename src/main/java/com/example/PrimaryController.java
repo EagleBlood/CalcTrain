@@ -1,50 +1,54 @@
 package com.example;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.Scene;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class PrimaryController {
 
@@ -53,6 +57,10 @@ public class PrimaryController {
     final double CLASS_COUCHETTE = 0.04;
     final double CLASS_SLEEPING = 0.02;
     final int PANE_PADDING = 15;
+    private static final String THEME_PREF_KEY = "theme";
+    private static final String DARK_THEME = "styleDark.css";
+    private static final String LIGHT_THEME = "style.css";
+    private static final String PREFS_FILE = "app_prefs.properties";
 
     @FXML
     private Label arrCount;
@@ -107,10 +115,10 @@ public class PrimaryController {
     private MenuItem clearMenuButton;
 
     @FXML
-    private MenuItem hideMenuSwitch;
+    private CheckMenuItem hideMenuSwitch;
 
     @FXML
-    private MenuItem themeMenuSwitch;
+    private CheckMenuItem themeMenuSwitch;
 
     @FXML
     private MenuItem exitMenuButton;
@@ -139,7 +147,6 @@ public class PrimaryController {
     private String filePath = null;
     private File lastOpenedDirectory = null;
     private boolean isMaximized = false;
-    public static String currentTheme = "styleDark.css";
     private double xOffset = 0;
     private double yOffset = 0;
 
@@ -176,6 +183,38 @@ public class PrimaryController {
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
+
+        // Load the current theme from app_prefs.properties
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+            props.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String currentTheme = props.getProperty(THEME_PREF_KEY, LIGHT_THEME);
+        themeMenuSwitch.setSelected(currentTheme.equals(DARK_THEME));
+
+
+        // Set the style of the main view
+        URL darkStyle = getClass().getResource(DARK_THEME);
+        URL lightStyle = getClass().getResource(LIGHT_THEME);
+
+        if (darkStyle == null || lightStyle == null) {
+            System.out.println("Could not find one or both of the stylesheets");
+            return;
+        }
+
+        String darkStyleExternalForm = darkStyle.toExternalForm();
+        String lightStyleExternalForm = lightStyle.toExternalForm();
+
+        if (currentTheme.equals(DARK_THEME)) {
+            mainView.getStylesheets().remove(lightStyleExternalForm);
+            mainView.getStylesheets().add(darkStyleExternalForm);
+        } else {
+            mainView.getStylesheets().remove(darkStyleExternalForm);
+            mainView.getStylesheets().add(lightStyleExternalForm);
+        }
     }
     
     @FXML
@@ -186,7 +225,20 @@ public class PrimaryController {
         SecondaryController secondaryController = loader.getController();
 
         AnchorPane secondaryView = secondaryController.getAnchorPane();
-        secondaryView.getStylesheets().add(PrimaryController.currentTheme);
+
+        // Load the current theme from app_prefs.properties
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+            props.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String currentTheme = props.getProperty(THEME_PREF_KEY);
+        URL themeURL = getClass().getResource(currentTheme);
+        if (themeURL != null) {
+            secondaryView.getStylesheets().add(themeURL.toExternalForm());
+        }
 
         Stage secondaryStage = new Stage();
         //secondaryStage.initStyle(StageStyle.UNDECORATED);
@@ -598,7 +650,22 @@ public class PrimaryController {
                 Stage stage = (Stage) window;
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("primary.fxml"));
-                stage.setScene(new Scene(loader.load()));
+                Scene scene = new Scene(loader.load());
+
+                Properties props = new Properties();
+                try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+                    props.load(in);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String theme = props.getProperty(THEME_PREF_KEY, LIGHT_THEME);
+                URL themeURL = getClass().getResource(theme);
+                if (themeURL != null) {
+                    scene.getStylesheets().add(themeURL.toExternalForm());
+                }
+
+                stage.setScene(scene);
                 stage.show();
             }
         } catch (IOException e) {
@@ -621,8 +688,8 @@ public class PrimaryController {
 
     @FXML
     private void handleThemeMenuSwitchAction(ActionEvent event) {
-        URL darkStyle = getClass().getResource("styleDark.css");
-        URL lightStyle = getClass().getResource("style.css");
+        URL darkStyle = getClass().getResource(DARK_THEME);
+        URL lightStyle = getClass().getResource(LIGHT_THEME);
 
         if (darkStyle == null || lightStyle == null) {
             System.out.println("Could not find one or both of the stylesheets");
@@ -632,14 +699,29 @@ public class PrimaryController {
         String darkStyleExternalForm = darkStyle.toExternalForm();
         String lightStyleExternalForm = lightStyle.toExternalForm();
 
-        if (mainView.getStylesheets().contains(darkStyleExternalForm)) {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+            props.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String currentTheme = props.getProperty(THEME_PREF_KEY, LIGHT_THEME);
+
+        if (currentTheme.equals(DARK_THEME)) {
             mainView.getStylesheets().remove(darkStyleExternalForm);
             mainView.getStylesheets().add(lightStyleExternalForm);
-            currentTheme = lightStyleExternalForm;
+            props.setProperty(THEME_PREF_KEY, LIGHT_THEME);
         } else {
             mainView.getStylesheets().remove(lightStyleExternalForm);
             mainView.getStylesheets().add(darkStyleExternalForm);
-            currentTheme = darkStyleExternalForm;
+            props.setProperty(THEME_PREF_KEY, DARK_THEME);
+        }
+
+        try (FileOutputStream out = new FileOutputStream(PREFS_FILE)) {
+            props.store(out, null);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
