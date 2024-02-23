@@ -46,19 +46,19 @@
                   </MenuBar>
                   <HBox alignment="TOP_RIGHT" styleClass="bgWhite" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleMinimizeButtonAction" styleClass="icon-buttonHide">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleMinimizeButtonAction" styleClass="icon-buttonMinimize">
                            <graphic>
-                              <Region prefHeight="200.0" prefWidth="200.0" styleClass="iconHide" />
+                              <Region styleClass="iconMinimize" />
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonIconEnlarge" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleMaximizeButtonAction" styleClass="icon-buttonEnlarge">
+                        <Button fx:id="buttonIconEnlarge" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleMaximizeButtonAction" styleClass="icon-buttonMaximize">
                            <graphic>
-                              <Region fx:id="regionIconEnlarge" prefHeight="200.0" prefWidth="200.0" styleClass="iconEnlarge" />
+                              <Region fx:id="regionIconEnlarge" styleClass="iconMaximize" />
                            </graphic>
                         </Button>
-                        <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleExitMenuButtonAction" styleClass="icon-buttonExit">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleExitMenuButtonAction" styleClass="icon-buttonExit">
                            <graphic>
-                              <Region prefHeight="200.0" prefWidth="200.0" styleClass="iconExit" />
+                              <Region styleClass="iconExit" />
                            </graphic>
                         </Button>
                      </children>
@@ -145,7 +145,7 @@
                                        <content>
                                           <AnchorPane>
                                              <children>
-                                                <GridPane fx:id="view_tickets1" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <GridPane fx:id="viewTickets1" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </content>
@@ -171,7 +171,7 @@
                                        <content>
                                           <AnchorPane>
                                              <children>
-                                                <GridPane fx:id="view_tickets2" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <GridPane fx:id="viewTickets2" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </content>
@@ -197,7 +197,7 @@
                                        <content>
                                           <AnchorPane>
                                              <children>
-                                                <GridPane fx:id="view_tickets3" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <GridPane fx:id="viewTickets3" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </content>
@@ -223,7 +223,7 @@
                                        <content>
                                           <AnchorPane>
                                              <children>
-                                                <GridPane fx:id="view_tickets4" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <GridPane fx:id="viewTickets4" prefHeight="668.0" prefWidth="393.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </content>

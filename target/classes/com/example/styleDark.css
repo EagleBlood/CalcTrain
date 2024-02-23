@@ -320,31 +320,11 @@ Spinner {
     -fx-background-color: #3a3a3a;
 }
 
-.icon-buttonHide {
-    -icon-paint: #eeeeee;
-    -fx-content-display: graphic-only;
-    -fx-background-color: #1a1a1a;
-}
-
-.icon-buttonHide:hover {
-    -fx-background-color: #3a3a3a;
-    -fx-border-radius: 0;
-}
-
-.icon-buttonHide .iconHide {
-    -fx-background-color: -icon-paint;
-    -size: 16;
-    -fx-min-height: -size;
-    -fx-min-width: -size;
-    -fx-max-height: -size;
-    -fx-max-width: -size;
-    -fx-shape: "M14.78 2.28a.75.75 0 0 0-1.06-1.06L10.5 4.44V2.75a.75.75 0 0 0-1.5 0V7h4.25a.75.75 0 0 0 0-1.5h-1.69zM5.5 11.56v1.69a.75.75 0 0 0 1.5 0V9H2.75a.75.75 0 0 0 0 1.5h1.69l-3.22 3.22a.75.75 0 1 0 1.06 1.06z";
-}
-
 .icon-buttonMinimize {
     -icon-paint: #eeeeee;
     -fx-content-display: graphic-only;
     -fx-background-color: #1a1a1a;
+    -fx-padding: 6 10;
 }
 
 .icon-buttonMinimize:hover {
@@ -354,52 +334,77 @@ Spinner {
 
 .icon-buttonMinimize .iconMinimize {
     -fx-background-color: -icon-paint;
-    -size: 16;
+    -size: 14;
     -fx-min-height: -size;
     -fx-min-width: -size;
     -fx-max-height: -size;
     -fx-max-width: -size;
-    -fx-shape: "M8 18q-.825 0-1.412-.587T6 16V4q0-.825.588-1.412T8 2h12q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm0-2h12V4H8zm-4 6q-.825 0-1.412-.587T2 20V6h2v14h14v2zM8 4v12z";
+    -fx-shape: "M0,0 L16,0 L16,2 L0,2 Z";
+    -fx-scale-shape: false;
 }
 
-.icon-buttonEnlarge {
+.icon-buttonRestore {
     -icon-paint: #eeeeee;
     -fx-content-display: graphic-only;
     -fx-background-color: #1a1a1a;
+    -fx-padding: 6 10;
 }
 
-.icon-buttonEnlarge:hover {
+.icon-buttonRestore:hover {
     -fx-background-color: #3a3a3a;
     -fx-border-radius: 0;
 }
 
-.icon-buttonEnlarge .iconEnlarge {
+.icon-buttonRestore .iconRestore {
     -fx-background-color: -icon-paint;
-    -size: 16;
+    -size: 14;
     -fx-min-height: -size;
     -fx-min-width: -size;
     -fx-max-height: -size;
     -fx-max-width: -size;
-    -fx-shape: "M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m0 176H48V48h160z";
+    -fx-shape: "M3 5v9h9V5zm8 8H4V6h7z M5 5h1V4h7v7h-1v1h2V3H5z";
+}
+
+.icon-buttonMaximize {
+    -icon-paint: #eeeeee;
+    -fx-content-display: graphic-only;
+    -fx-background-color: #1a1a1a;
+    -fx-padding: 6 10;
+}
+
+.icon-buttonMaximize:hover {
+    -fx-background-color: #3a3a3a;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonMaximize .iconMaximize {
+    -fx-background-color: -icon-paint;
+    -size: 14;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M3 3v10h10V3zm9 9H4V4h8z";
 }
 
 .icon-buttonExit {
     -icon-paint: #eeeeee;
     -fx-content-display: graphic-only;
     -fx-background-color: #1a1a1a;
+    -fx-padding: 6 10;
 }
 
 .icon-buttonExit:hover {
-    -fx-background-color: #3a3a3a;
+    -fx-background-color: #811e1e;
     -fx-border-radius: 0;
 }
 
 .icon-buttonExit .iconExit {
     -fx-background-color: -icon-paint;
-    -size: 16;
+    -size: 14;
     -fx-min-height: -size;
     -fx-min-width: -size;
     -fx-max-height: -size;
     -fx-max-width: -size;
-    -fx-shape: "M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z";
+    -fx-shape: "m7.116 8l-4.558 4.558l.884.884L8 8.884l4.558 4.558l.884-.884L8.884 8l4.558-4.558l-.884-.884L8 7.116L3.442 2.558l-.884.884z";
 }

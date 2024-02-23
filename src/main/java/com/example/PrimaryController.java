@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -19,6 +20,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.HBox;
@@ -75,16 +77,16 @@ public class PrimaryController {
     private GridPane view4;
 
     @FXML
-    private GridPane view_tickets1;
+    private GridPane viewTickets1;
 
     @FXML
-    private GridPane view_tickets2;
+    private GridPane viewTickets2;
 
     @FXML
-    private GridPane view_tickets3;
+    private GridPane viewTickets3;
 
     @FXML
-    private GridPane view_tickets4;
+    private GridPane viewTickets4;
 
     @FXML
     private Button importButton;
@@ -146,12 +148,7 @@ public class PrimaryController {
      * TODO - add a progress bar / circle to show the progress of the calculation
      * TODO - add a icon
      * TODO - add a splash screen
-     * TODO - change the icon when window is enlarged
-     * TODO - change the icon of minimize button
      * TODO - fix the lightmode styling
-     * FIX - after clean option from menu was clicked, calculation is not working, saying no values are present NOT ALWAYS
-     * FIX - when No matching ticket price found, the text in bearly visible
-     * FIX - clean function should clean grinds aswell, currently it adds new cells on top of the old ones
     */
 
     @SuppressWarnings("unchecked")
@@ -328,7 +325,7 @@ public class PrimaryController {
     }
 
     @SuppressWarnings("exports")
-    public void addLabelsToGrid(GridPane view, GridPane view_tickets, List<double[]> values, double classes) {
+    public void addLabelsToGrid(GridPane view, GridPane viewTickets, List<double[]> values, double classes) {
         TicketPrice matchingTicketPrice = null;
         ticketPrices = getValuesAsTicketPrices();
         double finalTicketPrice = 0;
@@ -351,7 +348,7 @@ public class PrimaryController {
     
             view.add(rowPaneView, 0, i + 1);
     
-            // Row label for view_tickets
+            // Row label for viewTickets
             Label rowLabelTickets = new Label(i + "");
             rowLabelTickets.setMaxWidth(Double.MAX_VALUE);
             rowLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
@@ -365,7 +362,7 @@ public class PrimaryController {
             GridPane.setHalignment(rowPaneTickets, HPos.CENTER);
             GridPane.setValignment(rowPaneTickets, VPos.CENTER);
     
-            view_tickets.add(rowPaneTickets, 0, i + 1);
+            viewTickets.add(rowPaneTickets, 0, i + 1);
     
             for (int j = 0; j < values.size(); j++) {
                 // Column label for view
@@ -385,7 +382,7 @@ public class PrimaryController {
     
                     view.add(columnPaneView, j + 1, 0);
     
-                    // Column label for view_tickets
+                    // Column label for viewTickets
                     Label columnLabelTickets = new Label(j + "");
                     columnLabelTickets.setMaxWidth(Double.MAX_VALUE);
                     columnLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
@@ -399,7 +396,7 @@ public class PrimaryController {
                     GridPane.setHalignment(columnPaneTickets, HPos.CENTER);
                     GridPane.setValignment(columnPaneTickets, VPos.CENTER);
     
-                    view_tickets.add(columnPaneTickets, j + 1, 0);
+                    viewTickets.add(columnPaneTickets, j + 1, 0);
                 }
 
                 // Label   
@@ -415,7 +412,7 @@ public class PrimaryController {
                     diagonalPane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
                     diagonalPane.getStyleClass().add("bg");
 
-                    view_tickets.add(diagonalPane, j + 1, i + 1);
+                    viewTickets.add(diagonalPane, j + 1, i + 1);
 
                     GridPane.setFillWidth(diagonalPane, true);
                     GridPane.setFillHeight(diagonalPane, true);
@@ -462,12 +459,12 @@ public class PrimaryController {
                         StackPane ticketPricePane = new StackPane(ticketPriceLabel);
                         ticketPricePane.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
                     
-                        view_tickets.add(ticketPricePane, j + 1, i + 1);
+                        viewTickets.add(ticketPricePane, j + 1, i + 1);
 
                         GridPane.setFillWidth(ticketPricePane, true);
                         GridPane.setFillHeight(ticketPricePane, true);
 
-                        highlightPane(view_tickets, ticketPricePane, i, j);
+                        highlightPane(viewTickets, ticketPricePane, i, j);
 
                        
                     } else { // TODO - needs a better way of handling price out of range best to not generate whole grid if no matching ticket price found
@@ -485,8 +482,10 @@ public class PrimaryController {
 
                 if(setErrorMesseage == true)
                 {
-                    view_tickets.getChildren().clear();
-                    view_tickets.add(new Label("No matching ticket price found."), 0, 0);
+                    viewTickets.getChildren().clear();
+                    Label viewTicketsLabel = new Label("No matching ticket price found.");
+                    viewTicketsLabel.getStyleClass().add("appTextFieldBold");
+                    viewTickets.add(viewTicketsLabel, 0, 0);
                 }
 
                 pane.getChildren().add(label);
@@ -534,15 +533,15 @@ public class PrimaryController {
         view3.getChildren().clear();
         view4.getChildren().clear();
 
-        view_tickets1.getChildren().clear();
-        view_tickets2.getChildren().clear();
-        view_tickets3.getChildren().clear();
-        view_tickets4.getChildren().clear();
+        viewTickets1.getChildren().clear();
+        viewTickets2.getChildren().clear();
+        viewTickets3.getChildren().clear();
+        viewTickets4.getChildren().clear();
     
-        addLabelsToGrid(view1, view_tickets1, values, CLASS_FIRST_CLASS);
-        addLabelsToGrid(view2, view_tickets2, values, CLASS_SECOND_CLASS);
-        addLabelsToGrid(view3, view_tickets3, values, CLASS_COUCHETTE);
-        addLabelsToGrid(view4, view_tickets4, values, CLASS_SLEEPING);
+        addLabelsToGrid(view1, viewTickets1, values, CLASS_FIRST_CLASS);
+        addLabelsToGrid(view2, viewTickets2, values, CLASS_SECOND_CLASS);
+        addLabelsToGrid(view3, viewTickets3, values, CLASS_COUCHETTE);
+        addLabelsToGrid(view4, viewTickets4, values, CLASS_SLEEPING);
     }
 
     private void highlightPane(GridPane view, StackPane pane, int i, int j) {
@@ -587,13 +586,24 @@ public class PrimaryController {
 
     // Menu items
 
-    @FXML // More functions later
+    @FXML
     private void handleClearMenuButtonAction(ActionEvent event) {
-        input.getChildren().clear();
-        hboxCount = 0;
-        addHBox();
-        addHBox();
-        arrCount.setText(String.valueOf(hboxCount));
+        try {
+            MenuItem menuItem = (MenuItem) event.getSource();
+            ContextMenu contextMenu = menuItem.getParentPopup();
+            if (contextMenu == null) return;
+
+            Window window = contextMenu.getOwnerWindow();
+            if (window instanceof Stage) {
+                Stage stage = (Stage) window;
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("primary.fxml"));
+                stage.setScene(new Scene(loader.load()));
+                stage.show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -673,12 +683,17 @@ public class PrimaryController {
     @FXML
     private void handleMaximizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) mainView.getScene().getWindow();
+
         if (isMaximized) {
             // Restore to windowed mode
+            buttonIconEnlarge.getStyleClass().setAll("icon-buttonMaximize");
+            regionIconEnlarge.getStyleClass().setAll("iconMaximize");
             stage.setFullScreen(false);
             isMaximized = false;
         } else {
             // Maximize the window
+            buttonIconEnlarge.getStyleClass().setAll("icon-buttonRestore");
+            regionIconEnlarge.getStyleClass().setAll("iconRestore");
             stage.setFullScreen(true);
             isMaximized = true;
         }
