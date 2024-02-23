@@ -60,7 +60,7 @@ public class PrimaryController {
     private static final String THEME_PREF_KEY = "theme";
     private static final String DARK_THEME = "styleDark.css";
     private static final String LIGHT_THEME = "style.css";
-    private static final String PREFS_FILE = "app_prefs.properties";
+    private static final String PREFS_FILE = "config/app_prefs.properties";
 
     @FXML
     private Label arrCount;
