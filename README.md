@@ -1,5 +1,7 @@
 # CaclTrain
 
+[![pl](https://img.shields.io/badge/lang-pl-red.svg)](README-PL.md)
+
 #### Train Route Demand and Ticket Pricing Calculator
 This project is a Java-based application designed to calculate the demand on various train routes and determine the optimal ticket prices. It's built for players of the [Railway Manager](https://sites.google.com/view/kolejowe-eg/strona-główna) game.
 
