@@ -22,7 +22,7 @@ The resulting two matrices display the calculated demand [person/route] (top) an
 
 ![Image3](src/img/3.PNG)
 
-Clicking the `Tariff` button opens a window for creating a valid JSON file with all necessary fields. Here, you can use the Ad`d or `Remove` buttons to add or remove records from the table. Data in any field can be modified at will. At least one field must be present in the table, and the two inputs below must contain a value for successful JSON creation.
+Clicking the `Tariff` button opens a window for creating a valid JSON file with all necessary fields. Here, you can use the `Add` or `Remove` buttons to add or remove records from the table. Data in any field can be modified at will. At least one field must be present in the table, and the two inputs below must contain a value for successful JSON creation.
 
 ![Image5](src/img/5.PNG)
 
