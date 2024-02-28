@@ -3,7 +3,7 @@
 #### Kalkulator Zapotrzebowania na Trasy Pociągowe i Ceny Biletów
 Ten projekt to aplikacja oparta na języku Java, zaprojektowana do obliczania zapotrzebowania na różnych trasach pociągowych i określania optymalnych cen biletów. Jest przeznaczony dla użytkowników gry [Railway Manager](https://sites.google.com/view/kolejowe-eg/strona-główna).
 
-![Image0](src/img/0.PNG)
+![Image0](src/main/resources/img/git/0.PNG)
 
 Aplikacja uwzględnia czynniki, takie jak liczba pasażerów, odległość trasy i czas przyjazdu, aby generować przepływy pasażerów dla każdej lini kolejowej. Potoki pasażerów stanowią podstawę do obliczania zapotrzebowania na każdą trasę, która jest reprezentowana w pierwszej macierzy. Ponadto aplikacja oblicza potencjalne przychody, jakie gracz może wygenerować na każdej trasie, co jest przedstawione w drugiej macierzy.
 
@@ -12,19 +12,19 @@ Ponadto użytkownicy mają możliwość tworzenia niestandardowego taryfikatora 
 ## Jak zacząć
 Najpierw upewnij się, że wszystkie niezbędne dane do obliczeń są wpisane. Jeśli nie masz taryfikatora, możesz go utworzyć (obraz 4) lub użyć domyślnego pliku `output.json`.
 
-![Image1](src/img/1.PNG)
+![Image1](src/main/resources/img/git/1.PNG)
 
 Po wprowadzeniu wszystkich danych kliknij przycisk `Calculate`, aby obliczyć zapotrzebowanie i ceny.
 
-![Image2](src/img/2.PNG)
+![Image2](src/main/resources/img/git/2.PNG)
 
 Dwa wynikowe wykresy przedstawiają obliczone zapotrzebowanie [osoba/trasa] (góra) oraz ceny biletów (dół) na podstawie podanej odległości, populacji i czasu. Możesz zaznaczyć dowolną komórkę w obu wykresach, aby ułatwić odczyt danych.
 
-![Image3](src/img/3.PNG)
+![Image3](src/main/resources/img/git/3.PNG)
 
 Kliknięcie przycisku `Tariff` otwiera okno do tworzenia pliku JSON. Tutaj możesz użyć przycisków `Add` lub `Remove`, aby dodać lub usunąć rekordy z tabeli. Dane w dowolnym polu można modyfikować wedle uznania. W tabeli musi być obecne przynajmniej jedno pole oraz dwa pola poniżej muszą zawierać wartość dla poprawnego utworzenia pliku JSON.
 
-![Image5](src/img/5.PNG)
+![Image5](src/main/resources/img/git/5.PNG)
 
 Po wstawieniu wszystkich niezbędnych danych, naciśnij przycisk `Create File`. Zostaniesz poproszony o wybranie nazwy i miejsca docelowego dla nowego pliku. Po utworzeniu nowy plik można od razu użyć do obliczeń.
 

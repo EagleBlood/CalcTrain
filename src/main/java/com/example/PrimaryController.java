@@ -149,18 +149,17 @@ public class PrimaryController {
     private boolean isMaximized = false;
     private double xOffset = 0;
     private double yOffset = 0;
+    private Glob glob = new Glob();
 
-    /* TODO - refractor all aletrs to a global class
-     * TODO - style the alert boxes
-     * TODO - add a progress bar / circle to show the progress of the calculation
-     * TODO - add a icon
-     * TODO - add a splash screen
-     * TODO - fix the lightmode styling
+    /*
+        TODO - style the alert boxes
+        TODO - add a progress bar / circle to show the progress of the calculation
     */
 
     @SuppressWarnings("unchecked")
     @FXML
     public void initialize() {
+
         if (fame != null) {
             SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9, 1);
             fame.setValueFactory(valueFactory);
@@ -242,6 +241,7 @@ public class PrimaryController {
 
         Stage secondaryStage = new Stage();
         //secondaryStage.initStyle(StageStyle.UNDECORATED);
+        secondaryStage.getIcons().add(new javafx.scene.image.Image(App.class.getResource("/img/app-icon.png").toExternalForm()));
         secondaryStage.setTitle("Create Tariff");
         secondaryStage.setScene(new Scene(root));
         secondaryStage.initModality(Modality.APPLICATION_MODAL);
@@ -350,14 +350,12 @@ public class PrimaryController {
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
     
-        // Set the initial directory to the last opened directory
         if (lastOpenedDirectory != null) {
             fileChooser.setInitialDirectory(lastOpenedDirectory);
         }
     
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
-            // Store the directory of the selected file
             lastOpenedDirectory = selectedFile.getParentFile();
     
             String fileName = selectedFile.getName();
@@ -365,12 +363,7 @@ public class PrimaryController {
             filePath = selectedFile.getPath();
             return filePath;
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setHeaderText("No File Selected");
-            alert.setContentText("Please select a file before proceeding.");
-            
-            alert.showAndWait();
+            glob.showWarningAlert("Warning Dialog", "No File Selected", "Please select a file before proceeding.");
             importButton.setText("Import Tariff");
             return "";
         }
@@ -560,23 +553,12 @@ public class PrimaryController {
         List<double[]> values = getValues();
 
         if (values == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setHeaderText("No Values");
-            alert.setContentText("Please fill all fields before proceeding.");
-            DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.getStyleClass().add("dialog-pane");
-
-            alert.showAndWait();
+            glob.showWarningAlert("Warning Dialog", "No Values", "Please fill all fields before proceeding.");
             return;
         }
 
         if (importButton.getText().equals("Import Tariff")) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setHeaderText("No Tariff Imported");
-            alert.setContentText("Please import a tariff before proceeding.");
-            alert.showAndWait();
+            glob.showWarningAlert("Warning Dialog", "No Tariff Imported", "Please import a tariff before proceeding.");
             return;
         }
     
@@ -733,6 +715,7 @@ public class PrimaryController {
 
    @FXML
     private void handleAboutMenuButtonAction(ActionEvent event) {
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
         alert.setHeaderText("Price Calculator");

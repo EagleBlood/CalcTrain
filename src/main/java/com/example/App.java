@@ -23,6 +23,7 @@ public class App extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.setTitle("Price Calculator");
+        stage.getIcons().add(new javafx.scene.image.Image(App.class.getResource("/img/app-icon.png").toExternalForm()));
         stage.show();
     }
 
