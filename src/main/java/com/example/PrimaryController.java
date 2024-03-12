@@ -112,6 +112,9 @@ public class PrimaryController {
     private MenuBar menuBar;
 
     @FXML
+    private CheckMenuItem namesMenuButton;
+
+    @FXML
     private MenuItem clearMenuButton;
 
     @FXML
@@ -253,13 +256,20 @@ public class PrimaryController {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER);
         hbox.setSpacing(10.0);
-    
-        Label label = new Label(String.valueOf(hboxCount) + ".");
-        label.setMinWidth(20);
-        label.setAlignment(Pos.CENTER_LEFT);
-        label.getStyleClass().add("appTextFieldBold");
-        hbox.getChildren().add(label);
-    
+
+        if (namesMenuButton.isSelected()) {
+            TextField townNameField = new TextField();
+            townNameField.setPromptText("Town");
+            townNameField.getStyleClass().add("appInputFieldMain");
+            hbox.getChildren().add(townNameField);
+        } else {
+            Label label = new Label(String.valueOf(hboxCount) + ".");
+            label.setMinWidth(20);
+            label.setAlignment(Pos.CENTER_LEFT);
+            label.getStyleClass().add("appTextFieldBold");
+            hbox.getChildren().add(label);
+        }
+
         String[] prompts = {"Dist", "Pop", "Time"};
         TextField[] textFields = new TextField[3];
         for (int i = 0; i < 3; i++) {
@@ -274,10 +284,10 @@ public class PrimaryController {
             hbox.getChildren().add(textField);
             textFields[i] = textField;
         }
-    
+
         input.getChildren().add(hbox);
         textFieldsList.add(textFields);
-    
+
         hboxCount++;
         arrCount.setText(String.valueOf(hboxCount));
     }

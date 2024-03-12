@@ -29,6 +29,7 @@
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
                         <items>
+                              <CheckMenuItem fx:id="namesMenuButton" mnemonicParsing="false" text="Town names" />
                               <MenuItem fx:id="clearMenuButton" mnemonicParsing="false" onAction="#handleClearMenuButtonAction" text="Clear" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <CheckMenuItem fx:id="hideMenuSwitch" mnemonicParsing="false" onAction="#handleHideMenuSwitchAction" text="Hide menu" />
@@ -65,9 +66,9 @@
                   </HBox>
                </children>
             </HBox>
-            <SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" scaleShape="false" styleClass="appBody" VBox.vgrow="ALWAYS">
+            <SplitPane fx:id="splitPane" dividerPositions="0.4" prefHeight="200.0" prefWidth="200.0" scaleShape="false" styleClass="appBody" VBox.vgrow="ALWAYS">
                <items>
-                  <VBox fx:id="menu" alignment="TOP_CENTER" maxWidth="285.0" prefHeight="700.0" prefWidth="285.0" spacing="20.0">
+                  <VBox fx:id="menu" alignment="TOP_CENTER" spacing="20.0">
                      <children>
                         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="749.0" prefWidth="227.0" styleClass="appTransparent" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
                            <content>
@@ -126,7 +127,7 @@
                         <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
                      </padding>
                   </VBox>
-                  <TabPane fx:id="tabValues" prefHeight="700.0" prefWidth="558.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane fx:id="tabValues" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                       <Tab styleClass="appTabPane" text="First Class">
                         <content>
