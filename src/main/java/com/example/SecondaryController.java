@@ -1,7 +1,6 @@
 package com.example;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -59,6 +58,8 @@ public class SecondaryController {
     @FXML
     private AnchorPane mainView;
 
+    private Glob glob = new Glob();
+
     @FXML
     public void initialize() {
         table.setEditable(true);
@@ -72,10 +73,8 @@ public class SecondaryController {
             TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
             cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
                 if (isNowEditing) {
-                    // Add the 'editing' style class when the cell enters editing mode
                     cell.getStyleClass().add("editing");
                 } else {
-                    // Remove the 'editing' style class when the cell exits editing mode
                     cell.getStyleClass().remove("editing");
                 }
             });
@@ -85,10 +84,8 @@ public class SecondaryController {
             TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
             cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
                 if (isNowEditing) {
-                    // Add the 'editing' style class when the cell enters editing mode
                     cell.getStyleClass().add("editing");
                 } else {
-                    // Remove the 'editing' style class when the cell exits editing mode
                     cell.getStyleClass().remove("editing");
                 }
             });
@@ -99,10 +96,8 @@ public class SecondaryController {
             TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
             cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
                 if (isNowEditing) {
-                    // Add the 'editing' style class when the cell enters editing mode
                     cell.getStyleClass().add("editing");
                 } else {
-                    // Remove the 'editing' style class when the cell exits editing mode
                     cell.getStyleClass().remove("editing");
                 }
             });
@@ -113,10 +108,8 @@ public class SecondaryController {
             TextFieldTableCell<TicketPrice, Double> cell = new TextFieldTableCell<>(new DoubleStringConverter());
             cell.editingProperty().addListener((obs, wasEditing, isNowEditing) -> {
                 if (isNowEditing) {
-                    // Add the 'editing' style class when the cell enters editing mode
                     cell.getStyleClass().add("editing");
                 } else {
-                    // Remove the 'editing' style class when the cell exits editing mode
                     cell.getStyleClass().remove("editing");
                 }
             });
@@ -148,12 +141,8 @@ public class SecondaryController {
     public void addRecord() {
         if (inputFrom.getText().isEmpty() || inputTo.getText().isEmpty() || 
             inputFirstClass.getText().isEmpty() || inputSecClass.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText(null);
-            alert.setContentText("All fields must be filled!");
 
-            alert.showAndWait();
+            glob.showWarningAlert("Warning", null, "All fields must be filled!");
         } else {
             // Get the input values
             double from = Double.parseDouble(inputFrom.getText());
@@ -191,11 +180,7 @@ public class SecondaryController {
     @FXML
     public void createJsonFile() {
         if (table.getItems().isEmpty() || inputCouchette.getText().isEmpty() || inputSleepClass.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText(null);
-            alert.setContentText("Please ensure at least one record is present and both inputs below are filled.");
-            alert.showAndWait();
+            glob.showWarningAlert("Warning", null, "Please ensure at least one record is present and both inputs below are filled.");
             return;
         }
     
@@ -224,13 +209,8 @@ public class SecondaryController {
         if (selectedFile != null) {
             try {
                 Files.write(selectedFile.toPath(), jsonObject.toString().getBytes());
-    
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("JSON file created successfully!");
-    
-                alert.showAndWait();
+
+                glob.showInformationAlert("Success", null, "JSON file created successfully!");
     
                 cancelAndReturn();
             } catch (IOException e) {

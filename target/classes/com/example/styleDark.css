@@ -1,0 +1,432 @@
+* {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    /*App colors*/
+    -app-bg-color: #1a1a1a;
+    -app-text-color: #eeeeee;
+    -app-button-color: #2d2d2d;
+    -app-button-hover-color: #5c5c5c;
+    -app-button-text-color: #eeeeee;
+
+    -app-input-border-color: #9e9e9e;
+
+    -app-scroll-bar-color: #2d2d2d;
+    -app-scroll-bar-thumb-color: #5c5c5c;
+    -app-scroll-bar-arrow-color: #eeeeee;
+
+    -table-view-cell-border-color: #1a1a1a;
+    -table-view-cell-even-color: #3a3a3a;
+    -table-view-cell-odd-color: #2d2d2d;
+    -table-view-cell-text-color: #eeeeee;
+    -table-view-cell-header-color: #2d2d2d;
+    -table-view-cell-header-text-color: #eeeeee;
+    -table-view-cell-editing-color: #3a3a3a;
+
+    -app-tab-color: #2d2d2d;
+    -app-tab-selected-color: #5c5c5c;
+
+    -pane-color: #5c5c5c;
+    -pane-text-color: #eeeeee;
+    -pane-highlight-color: #ff3333;
+    -pane-highlight-value-color: #aa0000;
+
+    -grid-pane-color: #2d2d2d;
+    -grid-pane-border-color: #3a3a3a;
+
+    -spinner-bg-color: #3a3a3a;
+    -spinner-arrow-color: #eeeeee;
+
+    -menu-bg-color: #1a1a1a;
+    -menu-border-color: #3a3a3a;
+    -menu-hover-color: #3a3a3a;
+    -menu-hover-danger-color: #811e1e;
+
+    -icon-paint: #eeeeee;
+}
+
+.bg{
+    -fx-background-color: -app-bg-color;
+
+}
+
+.highlight {
+    -fx-background-color: -pane-highlight-color;
+}
+
+.highlightValue {
+    -fx-background-color: -pane-highlight-value-color;
+}
+
+.highlightValueText {
+    -fx-text-fill: -app-text-color;
+}
+
+.appBody {
+    -fx-background-color: -app-bg-color;
+}
+
+.appButton {
+    -fx-background-color: -app-button-color;
+    -fx-text-fill: -app-button-text-color;
+    -fx-background-radius: 15;
+    -fx-font-size: 15;
+    -fx-padding: 10 10 10 10;
+}
+
+.appButtonSmall {
+    -fx-background-color: -app-button-color;
+    -fx-text-fill: -app-button-text-color;
+    -fx-background-radius: 10;
+    -fx-font-size: 15;
+    -fx-padding: 5 10 5 10;
+}
+
+.appButton:hover, .appButtonSmall:hover {
+    -fx-background-color: -app-button-hover-color;
+    -fx-text-fill: -app-button-text-color;
+}
+
+.appInputFieldMain {
+    -fx-background-color: -app-bg-color;
+    -fx-border-color: -app-input-border-color;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 0 0 1 0;
+    -fx-text-fill: -app-text-color;
+}
+
+.appTextField {
+    -fx-font-size: 12;
+    -fx-text-fill: -app-text-color;
+}
+
+.appTextFieldBold {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-text-color;
+}
+
+.appTransparent {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+.appInputField {
+    -fx-background-color: -app-bg-color;
+    -fx-border-color: -app-input-border-color;
+    -fx-padding: 5 5 5 5;
+    -fx-border-width: 0 0 1 0;
+    -fx-text-fill: -app-text-color;
+}
+
+
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color: -app-scroll-bar-color;
+    -fx-background-radius: 0em;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: -app-scroll-bar-color;
+    -fx-border-color: -app-scroll-bar-color;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: -app-scroll-bar-color;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: -app-scroll-bar-thumb-color;
+    -fx-background-radius: 5em;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: -app-scroll-bar-arrow-color;
+    -fx-border-color: -app-scroll-bar-arrow-color;
+}
+
+
+
+.table-row-cell:filled:selected, .table-row-cell:filled:selected:hover {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.table-view {
+    -fx-table-cell-border-color: table-view-cell-border-color;
+    -fx-background-color: table-view-cell-border-color;
+}
+
+.table-view:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:even {
+    -fx-background-color: -fx-table-cell-border-color, -table-view-cell-even-color;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -fx-table-cell-border-color, -table-view-cell-odd-color;
+}
+
+.table-row-cell .text {
+    -fx-fill: -table-view-cell-text-color;
+}
+
+.table-view .column-header {
+    -fx-background-color: -table-view-cell-header-color;
+}
+
+.table-view .column-header .text {
+    -fx-fill: -table-view-cell-header-text-color;
+    -fx-font-size: 15;
+    -fx-font-style: normal;
+}
+
+.table-cell.editing .text-field {
+    -fx-background-color: -table-view-cell-editing-color;
+    -fx-border-color: transparent;
+    -fx-text-fill: table-view-cell-text-color;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+
+
+.appTabPane {
+    -fx-background-color: -app-tab-color;
+    -fx-text-base-color: -app-text-color;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15 15 0 0;
+    -fx-padding: 3 8 0 8;
+}
+
+.appTabPane:hover {
+    -fx-background-color: -app-tab-color;
+    -fx-padding: 10 8 0 8;
+}
+
+.appTabPane:selected {
+    -fx-padding: 10 20 0 20;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: -app-tab-color;
+    -fx-opacity: 0;
+}
+
+.tab-pane .tab {
+    -fx-background-color: -app-tab-color;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: -app-tab-selected-color;
+}
+
+
+
+
+.paneHeader {
+    -fx-background-color: -pane-color;
+    -fx-text-fill: -pane-text-color;
+}
+
+.paneHeaderText {
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-text-fill: -pane-text-color;
+}
+
+GridPane {
+    -fx-background-color: -grid-pane-color;
+    -fx-border-color: -grid-pane-border-color;
+}
+
+
+
+StackPane:hover
+{
+    -fx-background-color: -app-button-hover-color;
+}
+
+
+
+SplitPane {
+    -fx-background-color: -app-bg-color;
+    -fx-border-color: -app-bg-color;
+}
+
+.split-pane-divider {
+    -fx-background-color: -app-bg-color;
+}
+
+
+
+Spinner {
+    -fx-background-color: -spinner-bg-color;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: -spinner-bg-color;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: -spinner-bg-color;
+}
+
+.spinner .increment-arrow,
+.spinner .decrement-arrow {
+    -fx-background-color: -spinner-arrow-color;
+}
+
+
+
+.context-menu {
+    -fx-background-color: -menu-bg-color;
+    -fx-background-insets: 0;
+    -fx-padding: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: -menu-border-color;
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.6) , 6, 0.0 , 0 , 0);
+}
+
+.menu-item:hover, .menu-item:focused {
+    -fx-background-color: -menu-hover-color;
+}
+.menu-item > .graphic-container {
+    -fx-padding: 0em 0.333em 0em 0em;
+}
+
+.menu-item >.label {
+    -fx-background-color:transparent;
+    -fx-padding: 0.2em 0.1em 0.2em 0.1em;
+    -fx-text-fill: -app-text-color;
+    -fx-effect: null;
+    -fx-font-size: 13;
+}
+.menu-item:focused > .label {
+    -fx-text-fill: -app-text-color;
+}
+.menu-bar {
+    -fx-background-color: -menu-bg-color;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.menu-bar .menu {
+    -fx-padding: 5 20;
+    -fx-background-color: transparent;
+}
+
+.menu-bar .text {
+    -fx-fill: -app-text-color;
+    -fx-font-size: 13;
+}
+
+.menu-bar .menu-button:hover, .menu-bar .menu-button:focused {
+    -fx-background-color: -menu-hover-color;
+}
+
+.menu-bar .menu:hover, .menu-bar .menu:showing {
+    -fx-background-color: -menu-hover-color;
+}
+
+.icon-buttonMinimize {
+    -fx-content-display: graphic-only;
+    -fx-background-color: -app-bg-color;
+    -fx-padding: 6 10;
+}
+
+.icon-buttonMinimize:hover {
+    -fx-background-color: -menu-hover-color;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonMinimize .iconMinimize {
+    -fx-background-color: -icon-paint;
+    -size: 14;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M0,0 L16,0 L16,2 L0,2 Z";
+    -fx-scale-shape: false;
+}
+
+.icon-buttonRestore {
+    -fx-content-display: graphic-only;
+    -fx-background-color: -app-bg-color;
+    -fx-padding: 6 10;
+}
+
+.icon-buttonRestore:hover {
+    -fx-background-color: -menu-hover-color;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonRestore .iconRestore {
+    -fx-background-color: -icon-paint;
+    -size: 14;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M3 5v9h9V5zm8 8H4V6h7z M5 5h1V4h7v7h-1v1h2V3H5z";
+}
+
+.icon-buttonMaximize {
+    -fx-content-display: graphic-only;
+    -fx-background-color: -app-bg-color;
+    -fx-padding: 6 10;
+}
+
+.icon-buttonMaximize:hover {
+    -fx-background-color: -menu-hover-color;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonMaximize .iconMaximize {
+    -fx-background-color: -icon-paint;
+    -size: 14;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M3 3v10h10V3zm9 9H4V4h8z";
+}
+
+.icon-buttonExit {
+    -fx-content-display: graphic-only;
+    -fx-background-color: -app-bg-color;
+    -fx-padding: 6 10;
+}
+
+.icon-buttonExit:hover {
+    -fx-background-color: -menu-hover-danger-color;
+    -fx-border-radius: 0;
+}
+
+.icon-buttonExit .iconExit {
+    -fx-background-color: -icon-paint;
+    -size: 14;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "m7.116 8l-4.558 4.558l.884.884L8 8.884l4.558 4.558l.884-.884L8.884 8l4.558-4.558l-.884-.884L8 7.116L3.442 2.558l-.884.884z";
+}

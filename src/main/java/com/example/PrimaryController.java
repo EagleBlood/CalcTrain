@@ -42,6 +42,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -157,12 +158,12 @@ public class PrimaryController {
     /*
         TODO - style the alert boxes
         TODO - add a progress bar / circle to show the progress of the calculation
+        TODO - finish addning towns names to the grid as labels when the namesMenuButton is selected
     */
 
     @SuppressWarnings("unchecked")
     @FXML
     public void initialize() {
-
         if (fame != null) {
             SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9, 1);
             fame.setValueFactory(valueFactory);
@@ -173,6 +174,10 @@ public class PrimaryController {
             addHBox();
             arrCount.setText(String.valueOf(hboxCount));
         }
+
+        namesMenuButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            changeLabelsToInputs(input);
+        });
 
         // make window draggable
         wholeMenuBar.setOnMousePressed(event -> {
@@ -257,22 +262,25 @@ public class PrimaryController {
         hbox.setAlignment(Pos.CENTER);
         hbox.setSpacing(10.0);
 
+        TextField[] textFields;
         if (namesMenuButton.isSelected()) {
             TextField townNameField = new TextField();
             townNameField.setPromptText("Town");
             townNameField.getStyleClass().add("appInputFieldMain");
             hbox.getChildren().add(townNameField);
+            textFields = new TextField[4];
+            textFields[0] = townNameField;
         } else {
             Label label = new Label(String.valueOf(hboxCount) + ".");
             label.setMinWidth(20);
             label.setAlignment(Pos.CENTER_LEFT);
             label.getStyleClass().add("appTextFieldBold");
             hbox.getChildren().add(label);
+            textFields = new TextField[3];
         }
 
         String[] prompts = {"Dist", "Pop", "Time"};
-        TextField[] textFields = new TextField[3];
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < prompts.length; i++) {
             TextField textField = new TextField();
             textField.setPromptText(prompts[i]);
             textField.getStyleClass().add("appInputFieldMain");
@@ -282,7 +290,11 @@ public class PrimaryController {
                 }
             });
             hbox.getChildren().add(textField);
-            textFields[i] = textField;
+            if (namesMenuButton.isSelected()) {
+                textFields[i + 1] = textField;
+            } else {
+                textFields[i] = textField;
+            }
         }
 
         input.getChildren().add(hbox);
@@ -291,7 +303,7 @@ public class PrimaryController {
         hboxCount++;
         arrCount.setText(String.valueOf(hboxCount));
     }
-
+    
     @FXML
     private void removeHBox() {
         if (input.getChildren().size() > 2) { // 2 added in init hboxes
@@ -306,17 +318,30 @@ public class PrimaryController {
     public List<double[]> getValues() {
         List<double[]> values = new ArrayList<>();
         for (TextField[] textFields : textFieldsList) {
-            double[] arr = new double[3];
-            for (int i = 0; i < 3; i++) {
-                String text = textFields[i].getText();
-                if (text.isEmpty()) {
-                    return null;
+            if (namesMenuButton.isSelected()) {
+                double[] arr = new double[3];
+                for (int i = 0; i < 3; i++) 
+                {
+                    String text = textFields[i + 1].getText();
+                    if (text.isEmpty()) {
+                        return null;
+                    }
+                    arr[i] = Double.parseDouble(text);
                 }
-                arr[i] = Double.parseDouble(text);
+                values.add(arr);
+            } else {
+                double[] arr = new double[3];
+                for (int i = 0; i < 3; i++) 
+                {
+                    String text = textFields[i].getText();
+                    if (text.isEmpty()) {
+                        return null;
+                    }
+                    arr[i] = Double.parseDouble(text);
+                }
+                values.add(arr);
             }
-            values.add(arr);
         }
-
         return values;
     }
 
@@ -388,35 +413,45 @@ public class PrimaryController {
 
         for (int i = 0; i < values.size(); i++) {
             // Row label for view
-            Label rowLabelView = new Label(i + "");
+            Label rowLabelView;
+            if (namesMenuButton.isSelected()) {
+                rowLabelView = new Label(values.get(i)[0] + "");
+            } else {
+                rowLabelView = new Label(i + "");
+            }
             rowLabelView.setMaxWidth(Double.MAX_VALUE);
             rowLabelView.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
             rowLabelView.setAlignment(Pos.CENTER);
             rowLabelView.getStyleClass().add("paneHeaderText");
-    
+
             StackPane rowPaneView = new StackPane(rowLabelView);
             rowPaneView.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
             rowPaneView.getStyleClass().add("paneHeader");
-    
+
             GridPane.setHalignment(rowPaneView, HPos.CENTER);
             GridPane.setValignment(rowPaneView, VPos.CENTER);
-    
+
             view.add(rowPaneView, 0, i + 1);
-    
+
             // Row label for viewTickets
-            Label rowLabelTickets = new Label(i + "");
+            Label rowLabelTickets;
+            if (namesMenuButton.isSelected()) {
+                rowLabelTickets = new Label(values.get(i)[0] + "");
+            } else {
+                rowLabelTickets = new Label(i + "");
+            }
             rowLabelTickets.setMaxWidth(Double.MAX_VALUE);
             rowLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
             rowLabelTickets.setAlignment(Pos.CENTER);
             rowLabelTickets.getStyleClass().add("paneHeaderText");
-    
+
             StackPane rowPaneTickets = new StackPane(rowLabelTickets);
             rowPaneTickets.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
             rowPaneTickets.getStyleClass().add("paneHeader");
-    
+
             GridPane.setHalignment(rowPaneTickets, HPos.CENTER);
             GridPane.setValignment(rowPaneTickets, VPos.CENTER);
-    
+
             viewTickets.add(rowPaneTickets, 0, i + 1);
     
             for (int j = 0; j < values.size(); j++) {
@@ -519,7 +554,7 @@ public class PrimaryController {
                         GridPane.setFillWidth(ticketPricePane, true);
                         GridPane.setFillHeight(ticketPricePane, true);
 
-                        highlightPane(viewTickets, ticketPricePane, i, j);
+                        glob.highlightPane(viewTickets, ticketPricePane, i, j);
 
                        
                     } else { // TODO - needs a better way of handling price out of range best to not generate whole grid if no matching ticket price found
@@ -553,7 +588,7 @@ public class PrimaryController {
                 GridPane.setFillHeight(pane, true);
                 
                 // Highlight the pane when clicked
-                highlightPane(view, pane, i, j);
+                glob.highlightPane(view, pane, i, j);
             }
         }
     }
@@ -588,45 +623,7 @@ public class PrimaryController {
         addLabelsToGrid(view4, viewTickets4, values, CLASS_SLEEPING);
     }
 
-    private void highlightPane(GridPane view, StackPane pane, int i, int j) {
-        pane.setOnMouseClicked(event -> {
-            if (pane.getStyleClass().contains("bg")) {
-                return;
-            }
     
-            boolean isHighlighted = pane.getStyleClass().contains("highlight");
-    
-            view.getChildren().forEach(node -> {
-                if (node instanceof StackPane) {
-                    StackPane stackPaneNode = (StackPane) node;
-                    stackPaneNode.getStyleClass().remove("highlight");
-                    stackPaneNode.getStyleClass().remove("highlightValue");
-                    if (!stackPaneNode.getChildrenUnmodifiable().isEmpty() && stackPaneNode.getChildrenUnmodifiable().get(0) instanceof Label) {
-                        stackPaneNode.getChildrenUnmodifiable().get(0).getStyleClass().remove("highlightValueText");
-                    }
-                }
-            });
-    
-            if (isHighlighted) {
-                return;
-            }
-    
-            for (Node node : view.getChildren()) {
-                if ((GridPane.getRowIndex(node) <= i + 1 && GridPane.getColumnIndex(node) == j + 1) ||
-                    (GridPane.getColumnIndex(node) <= j + 1 && GridPane.getRowIndex(node) == i + 1)) {
-                    if (node instanceof StackPane) {
-                        node.getStyleClass().add("highlight");
-                    }
-                }
-            }
-    
-            pane.getStyleClass().add("highlightValue");
-    
-            if (!pane.getChildrenUnmodifiable().isEmpty() && pane.getChildrenUnmodifiable().get(0) instanceof Label) {
-                pane.getChildrenUnmodifiable().get(0).getStyleClass().add("highlightValueText");
-            }
-        });
-    }
 
     // Menu items
 
@@ -773,4 +770,29 @@ public class PrimaryController {
             isMaximized = true;
         }
     }
+
+    public void changeLabelsToInputs(@SuppressWarnings("exports") Pane parentContainer) {
+        List<Node> children = new ArrayList<>(parentContainer.getChildren());
+        for (int i = 0; i < children.size(); i++) {
+            Node child = children.get(i);
+            if (child instanceof HBox) {
+                HBox hbox = (HBox) child;
+                Node firstChild = hbox.getChildren().get(0);
+                if (namesMenuButton.isSelected() && firstChild instanceof Label) {
+                    TextField townNameField = new TextField();
+                    townNameField.setPromptText("Town");
+                    townNameField.getStyleClass().add("appInputFieldMain");
+                    hbox.getChildren().set(0, townNameField);
+                } else if (!namesMenuButton.isSelected() && firstChild instanceof TextField) {
+                    Label label = new Label(String.valueOf(i % hboxCount) + ".");
+                    label.setMinWidth(20);
+                    label.setAlignment(Pos.CENTER_LEFT);
+                    label.getStyleClass().add("appTextFieldBold");
+                    hbox.getChildren().set(0, label);
+                }
+            }
+        }
+    }
+
+
 }
