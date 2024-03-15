@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -143,7 +144,7 @@ public class PrimaryController {
     private HBox wholeMenuBar;
 
 
-    private List<TextField[]> textFieldsList = new ArrayList<>();
+    private List<Node[]> textFieldsList = new ArrayList<>();
     private int hboxCount = 0;
     private List<TicketPrice> ticketPrices;
     private double couchette;
@@ -159,6 +160,8 @@ public class PrimaryController {
         TODO - style the alert boxes
         TODO - add a progress bar / circle to show the progress of the calculation
         TODO - finish addning towns names to the grid as labels when the namesMenuButton is selected
+        TODO - no problem is rooted deeper, we have the inputs that are taken correctly, adding new records have no issiues with the logic, problem arrise when we switch that damn menu item then it changes the inputs acordingly but for some reason it still remembers what was there before (eg if labels were firstly added and it was switched later to town names it will remember the labels as they were until new records have been added and if towns were first and it was switched back it still remembers the names instead of taking the labels as it is shown in app)
+        TODO - try to keep the namesMenuButton selected when clicked and clear the window somehow
     */
 
     @SuppressWarnings("unchecked")
@@ -170,13 +173,16 @@ public class PrimaryController {
         }
     
         if (input != null) {
-            addHBox();
-            addHBox();
+            //addHBox();
+            //addHBox();
             arrCount.setText(String.valueOf(hboxCount));
         }
 
         namesMenuButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            changeLabelsToInputs(input);
+            ActionEvent event = new ActionEvent(namesMenuButton, ActionEvent.NULL_SOURCE_TARGET);
+            handleClearMenuButtonAction(event);
+            
+
         });
 
         // make window draggable
@@ -262,13 +268,12 @@ public class PrimaryController {
         hbox.setAlignment(Pos.CENTER);
         hbox.setSpacing(10.0);
 
-        TextField[] textFields;
+        TextField[] textFields = new TextField[4];
         if (namesMenuButton.isSelected()) {
             TextField townNameField = new TextField();
             townNameField.setPromptText("Town");
             townNameField.getStyleClass().add("appInputFieldMain");
             hbox.getChildren().add(townNameField);
-            textFields = new TextField[4];
             textFields[0] = townNameField;
         } else {
             Label label = new Label(String.valueOf(hboxCount) + ".");
@@ -276,7 +281,7 @@ public class PrimaryController {
             label.setAlignment(Pos.CENTER_LEFT);
             label.getStyleClass().add("appTextFieldBold");
             hbox.getChildren().add(label);
-            textFields = new TextField[3];
+            textFields[0] = null;
         }
 
         String[] prompts = {"Dist", "Pop", "Time"};
@@ -292,12 +297,16 @@ public class PrimaryController {
             hbox.getChildren().add(textField);
             if (namesMenuButton.isSelected()) {
                 textFields[i + 1] = textField;
+                
             } else {
                 textFields[i] = textField;
             }
         }
 
         input.getChildren().add(hbox);
+
+
+        System.out.println("Size before list append: " + textFields.length);
         textFieldsList.add(textFields);
 
         hboxCount++;
@@ -315,60 +324,82 @@ public class PrimaryController {
         }
     }
 
-    public List<double[]> getValues() {
-        List<double[]> values = new ArrayList<>();
-        for (TextField[] textFields : textFieldsList) {
+    public List<TownValues> getValues() {
+        List<TownValues> values = new ArrayList<>();
+        for (Node[] nodes : textFieldsList) {
             if (namesMenuButton.isSelected()) {
+                if (nodes.length < 4) {
+                    System.out.println("Returning null because nodes.length < 4");
+                    return null;
+                }
+                String townName = ((TextField) nodes[0]).getText();
                 double[] arr = new double[3];
-                for (int i = 0; i < 3; i++) 
-                {
-                    String text = textFields[i + 1].getText();
+                for (int i = 0; i < 3; i++) {
+                    if (nodes[i + 1] == null) {
+                        System.out.println("Skipping because nodes[" + (i + 1) + "] is null");
+                        continue;
+                    }
+                    String text = ((TextField) nodes[i + 1]).getText();
                     if (text.isEmpty()) {
+                        System.out.println("Returning null because text is empty");
                         return null;
                     }
                     arr[i] = Double.parseDouble(text);
                 }
-                values.add(arr);
+                values.add(new TownValues(townName, arr));
             } else {
+                String townName;
+                if (nodes[0] instanceof Label) {
+                    townName = ((Label) nodes[0]).getText();
+                } else if (nodes[0] instanceof TextField) {
+                    townName = ((TextField) nodes[0]).getText();
+                } else {
+                    throw new RuntimeException("Unexpected type: " + nodes[0]);
+                }
                 double[] arr = new double[3];
-                for (int i = 0; i < 3; i++) 
-                {
-                    String text = textFields[i].getText();
+                for (int i = 0; i < 3; i++) {
+                    if (nodes[i] == null) {
+                        System.out.println("Skipping because nodes[" + i + "] is null");
+                        continue;
+                    }
+                    String text = ((TextField) nodes[i]).getText();
                     if (text.isEmpty()) {
+                        System.out.println("Returning null because text is empty");
                         return null;
                     }
                     arr[i] = Double.parseDouble(text);
                 }
-                values.add(arr);
+                values.add(new TownValues(townName, arr));
             }
         }
+        System.out.println("Returning values: " + values);
         return values;
     }
 
     public List<TicketPrice> getValuesAsTicketPrices() {
-    List<TicketPrice> values = new ArrayList<>();
-    try {
-        String content = new String(Files.readAllBytes(Paths.get(filePath)));
-        JSONObject jsonObject = new JSONObject(content);
+        List<TicketPrice> values = new ArrayList<>();
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONObject jsonObject = new JSONObject(content);
 
-        couchette = jsonObject.getDouble("couchette");
-        sleepClass = jsonObject.getDouble("sleepClass");
+            couchette = jsonObject.getDouble("couchette");
+            sleepClass = jsonObject.getDouble("sleepClass");
 
-        JSONArray tableData = jsonObject.getJSONArray("tableData");
-        for (int i = 0; i < tableData.length(); i++) {
-            JSONObject data = tableData.getJSONObject(i);
-            double fromStation = data.getDouble("fromStation");
-            double toStation = data.getDouble("toStation");
-            double secondClassPrice = data.getDouble("secondClassPrice");
-            double firstClassPrice = data.getDouble("firstClassPrice");             
-            values.add(new TicketPrice(fromStation, toStation, firstClassPrice, secondClassPrice));
+            JSONArray tableData = jsonObject.getJSONArray("tableData");
+            for (int i = 0; i < tableData.length(); i++) {
+                JSONObject data = tableData.getJSONObject(i);
+                double fromStation = data.getDouble("fromStation");
+                double toStation = data.getDouble("toStation");
+                double secondClassPrice = data.getDouble("secondClassPrice");
+                double firstClassPrice = data.getDouble("firstClassPrice");             
+                values.add(new TicketPrice(fromStation, toStation, firstClassPrice, secondClassPrice));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
 
-    return values;
-}
+        return values;
+    }
 
     @FXML
     private void handleImportButtonAction(ActionEvent event) {
@@ -405,7 +436,7 @@ public class PrimaryController {
     }
 
     @SuppressWarnings("exports")
-    public void addLabelsToGrid(GridPane view, GridPane viewTickets, List<double[]> values, double classes) {
+    public void addLabelsToGrid(GridPane view, GridPane viewTickets, List<TownValues> values, double classes) {
         TicketPrice matchingTicketPrice = null;
         ticketPrices = getValuesAsTicketPrices();
         double finalTicketPrice = 0;
@@ -415,7 +446,7 @@ public class PrimaryController {
             // Row label for view
             Label rowLabelView;
             if (namesMenuButton.isSelected()) {
-                rowLabelView = new Label(values.get(i)[0] + "");
+                rowLabelView = new Label(values.get(i).getTownName());
             } else {
                 rowLabelView = new Label(i + "");
             }
@@ -436,7 +467,7 @@ public class PrimaryController {
             // Row label for viewTickets
             Label rowLabelTickets;
             if (namesMenuButton.isSelected()) {
-                rowLabelTickets = new Label(values.get(i)[0] + "");
+                rowLabelTickets = new Label(values.get(i).getTownName());
             } else {
                 rowLabelTickets = new Label(i + "");
             }
@@ -507,14 +538,26 @@ public class PrimaryController {
                     GridPane.setFillWidth(diagonalPane, true);
                     GridPane.setFillHeight(diagonalPane, true);
                 } else {
-                    double[] A = values.get(i);
-                    double[] B = values.get(j);
-    
-                    if (A.length < 3 || B.length < 3) {
+                    double[] A;
+                    double[] B;
+
+                    if (namesMenuButton.isSelected()) {
+                        A = Arrays.copyOfRange(values.get(i).getValues(), 1, values.get(i).getValues().length);
+                        B = Arrays.copyOfRange(values.get(j).getValues(), 1, values.get(j).getValues().length);
+                    } else {
+                        A = values.get(i).getValues();
+                        B = values.get(j).getValues();
+                    }
+
+                    if (A.length < 3 || B.length < 3 && !namesMenuButton.isSelected()) {
                         System.out.println("Error: Each array should have 3 elements.");
                         return;
+                    } else if (A.length < 4 || B.length < 4 && namesMenuButton.isSelected()) {
+                        System.out.println("Error: Each array should have 4 elements.");
+                        return;
                     }
-                    double distance = (double)B[0] - A[0];
+
+                    double distance = B[0] - A[0];
 
                     for (TicketPrice ticketPrice : ticketPrices) {
                         if (distance >= ticketPrice.getFromStation() && distance < ticketPrice.getToStation()) {
@@ -523,8 +566,8 @@ public class PrimaryController {
                         }
                     }
 
-                    double pairResult = ( ((double)A[1] + B[1]) / 600000 * ( distance / (B[2] - A[2]) ) * (Integer)fame.getValue() * 1.6 ) * classes;
-
+                    double pairResult = ((A[1] + B[1]) / 600000 * (distance / (B[2] - A[2])) * (Integer)fame.getValue() * 1.6) * classes;
+                    
                     if (matchingTicketPrice != null) {
                         if (classes == CLASS_FIRST_CLASS) {
                             finalTicketPrice = pairResult * matchingTicketPrice.getFirstClassPrice();
@@ -595,7 +638,15 @@ public class PrimaryController {
 
     @FXML
     public void sumValues() {
-        List<double[]> values = getValues();
+        List<TownValues> values = getValues();
+
+        //print values
+        for(TownValues value : values) {
+            System.out.println(value.getTownName());
+            for(double val : value.getValues()) {
+                System.out.println(val);
+            }
+        }
 
         if (values == null) {
             glob.showWarningAlert("Warning Dialog", "No Values", "Please fill all fields before proceeding.");
@@ -771,7 +822,7 @@ public class PrimaryController {
         }
     }
 
-    public void changeLabelsToInputs(@SuppressWarnings("exports") Pane parentContainer) {
+    /*public void changeLabelsToInputs(@SuppressWarnings("exports") Pane parentContainer) {
         List<Node> children = new ArrayList<>(parentContainer.getChildren());
         for (int i = 0; i < children.size(); i++) {
             Node child = children.get(i);
@@ -783,16 +834,38 @@ public class PrimaryController {
                     townNameField.setPromptText("Town");
                     townNameField.getStyleClass().add("appInputFieldMain");
                     hbox.getChildren().set(0, townNameField);
+                    textFieldsList.get(i)[0] = townNameField; // Update the textFieldsList
                 } else if (!namesMenuButton.isSelected() && firstChild instanceof TextField) {
-                    Label label = new Label(String.valueOf(i % hboxCount) + ".");
+                    String labelText = String.valueOf(i % hboxCount) + ".";
+                    Label label = new Label(labelText);
                     label.setMinWidth(20);
                     label.setAlignment(Pos.CENTER_LEFT);
                     label.getStyleClass().add("appTextFieldBold");
                     hbox.getChildren().set(0, label);
+                    for (int j = 0; j < hboxCount; j++) {
+                        Node[] nodes = new Node[4];
+                        nodes[0] = new TextField();
+                        for (int k = 1; k < 4; k++) {
+                            nodes[j] = new TextField();
+                        }
+                        textFieldsList.add(nodes);
+                    }
                 }
             }
         }
     }
+
+    public void resetWindow() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/primary.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) mainView.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 
 
 }
