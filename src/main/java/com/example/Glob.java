@@ -1,22 +1,34 @@
 package com.example;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
-import javafx.fxml.FXMLLoader;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class Glob {
 
-    private static final String PREFS_FILE = "config/app_prefs.properties";
+    public final double CLASS_FIRST_CLASS = 0.18;
+    public final double CLASS_SECOND_CLASS = 0.8;
+    public final double CLASS_COUCHETTE = 0.04;
+    public final double CLASS_SLEEPING = 0.02;
+    public final String THEME_PREF_KEY = "theme";
+    public final String DARK_THEME = "styleDark.css";
+    public final String LIGHT_THEME = "style.css";
+
+    public final String NAMES_PREF_KEY = "names";
+    public final String LABEL_NAMES = "label";
+    public final String TOWN_NAMES = "town";
+    public final String PREFS_FILE = "config/app_prefs.properties";
 
     public void showWarningAlert(String title, String header, String content) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
@@ -83,29 +95,82 @@ public class Glob {
         });
     }
 
-    public void resetWindow(Stage stage, String fxmlFilePath) {
+    public List<TicketPrice> getValuesAsTicketPrices(String filePath, double couchette, double sleepClass) {
+        List<TicketPrice> values = new ArrayList<>();
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFilePath));
-            Parent root = fxmlLoader.load();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONObject jsonObject = new JSONObject(content);
+
+            couchette = jsonObject.getDouble("couchette");
+            sleepClass = jsonObject.getDouble("sleepClass");
+
+            JSONArray tableData = jsonObject.getJSONArray("tableData");
+            for (int i = 0; i < tableData.length(); i++) {
+                JSONObject data = tableData.getJSONObject(i);
+                double fromStation = data.getDouble("fromStation");
+                double toStation = data.getDouble("toStation");
+                double secondClassPrice = data.getDouble("secondClassPrice");
+                double firstClassPrice = data.getDouble("firstClassPrice");             
+                values.add(new TicketPrice(fromStation, toStation, firstClassPrice, secondClassPrice));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return values;
     }
 
-    private void loadSwitchState(CheckMenuItem customSwitch, String prefKey, String expectedValue) {
-        Properties appPrefs = new Properties();
-        try {
-            // Load the existing properties
-            appPrefs.load(new FileInputStream(PREFS_FILE));
-    
-            // Update the state of the customSwitch based on the property
-            customSwitch.setSelected(expectedValue.equals(appPrefs.getProperty(prefKey)));
-    
-        } catch (IOException e) {
-            e.printStackTrace();
+    @SuppressWarnings("exports")
+    public List<TownValues> getValues(List<Node[]> listOfNodes, CheckMenuItem checkMenuItem) {
+        List<TownValues> values = new ArrayList<>();
+        for (Node[] nodes : listOfNodes) {
+            if (checkMenuItem.isSelected()) {
+                if (nodes.length < 4) {
+                    System.out.println("Returning null because nodes.length < 4");
+                    return null;
+                }
+                String townName = ((TextField) nodes[0]).getText();
+                double[] arr = new double[3];
+                for (int i = 0; i < 3; i++) {
+                    if (nodes[i + 1] == null) {
+                        System.out.println("Skipping because nodes[" + (i + 1) + "] is null");
+                        continue;
+                    }
+                    String text = ((TextField) nodes[i + 1]).getText();
+                    if (text.isEmpty()) {
+                        System.out.println("Returning null because text is empty");
+                        return null;
+                    }
+                    arr[i] = Double.parseDouble(text);
+                }
+                values.add(new TownValues(townName, arr));
+            } else {
+                String townName;
+                if (nodes[0] instanceof Label) {
+                    townName = ((Label) nodes[0]).getText();
+                } else if (nodes[0] instanceof TextField) {
+                    townName = ((TextField) nodes[0]).getText();
+                } else {
+                    throw new RuntimeException("Unexpected type: " + nodes[0]);
+                }
+                double[] arr = new double[3];
+                for (int i = 0; i < 3; i++) {
+                    if (nodes[i] == null) {
+                        System.out.println("Skipping because nodes[" + i + "] is null");
+                        continue;
+                    }
+                    String text = ((TextField) nodes[i]).getText();
+                    if (text.isEmpty()) {
+                        System.out.println("Returning null because text is empty");
+                        return null;
+                    }
+                    arr[i] = Double.parseDouble(text);
+                }
+                values.add(new TownValues(townName, arr));
+            }
         }
+        System.out.println("Returning values: " + values);
+        return values;
     }
 
     

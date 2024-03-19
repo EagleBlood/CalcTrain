@@ -5,15 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -43,7 +37,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -54,19 +47,9 @@ import javafx.stage.Window;
 
 public class PrimaryController {
 
-    final double CLASS_FIRST_CLASS = 0.18;
-    final double CLASS_SECOND_CLASS = 0.8;
-    final double CLASS_COUCHETTE = 0.04;
-    final double CLASS_SLEEPING = 0.02;
+    
     final int PANE_PADDING = 15;
-    private static final String THEME_PREF_KEY = "theme";
-    private static final String DARK_THEME = "styleDark.css";
-    private static final String LIGHT_THEME = "style.css";
-
-    private static final String NAMES_PREF_KEY = "names";
-    private static final String LABEL_NAMES = "label";
-    private static final String TOWN_NAMES = "town";
-    private static final String PREFS_FILE = "config/app_prefs.properties";
+    
 
     @FXML
     private Label arrCount;
@@ -190,21 +173,21 @@ public class PrimaryController {
 
         // Load the current theme from app_prefs.properties
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+        try (FileInputStream in = new FileInputStream(glob.PREFS_FILE)) {
             props.load(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        String currentNames = props.getProperty(NAMES_PREF_KEY, LABEL_NAMES);
-        namesMenuButton.setSelected(currentNames.equals(TOWN_NAMES));
+        String currentNames = props.getProperty(glob.NAMES_PREF_KEY, glob.LABEL_NAMES);
+        namesMenuButton.setSelected(currentNames.equals(glob.TOWN_NAMES));
 
-        String currentTheme = props.getProperty(THEME_PREF_KEY, LIGHT_THEME);
-        themeMenuSwitch.setSelected(currentTheme.equals(DARK_THEME));
+        String currentTheme = props.getProperty(glob.THEME_PREF_KEY, glob.LIGHT_THEME);
+        themeMenuSwitch.setSelected(currentTheme.equals(glob.DARK_THEME));
 
         // Set the style of the main view
-        URL darkStyle = getClass().getResource(DARK_THEME);
-        URL lightStyle = getClass().getResource(LIGHT_THEME);
+        URL darkStyle = getClass().getResource(glob.DARK_THEME);
+        URL lightStyle = getClass().getResource(glob.LIGHT_THEME);
 
         if (darkStyle == null || lightStyle == null) {
             System.out.println("Could not find one or both of the stylesheets");
@@ -214,7 +197,7 @@ public class PrimaryController {
         String darkStyleExternalForm = darkStyle.toExternalForm();
         String lightStyleExternalForm = lightStyle.toExternalForm();
 
-        if (currentTheme.equals(DARK_THEME)) {
+        if (currentTheme.equals(glob.DARK_THEME)) {
             mainView.getStylesheets().remove(lightStyleExternalForm);
             mainView.getStylesheets().add(darkStyleExternalForm);
         } else {
@@ -239,13 +222,13 @@ public class PrimaryController {
         AnchorPane secondaryView = secondaryController.getAnchorPane();
 
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+        try (FileInputStream in = new FileInputStream(glob.PREFS_FILE)) {
             props.load(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        String currentTheme = props.getProperty(THEME_PREF_KEY);
+        String currentTheme = props.getProperty(glob.THEME_PREF_KEY);
         URL themeURL = getClass().getResource(currentTheme);
         if (themeURL != null) {
             secondaryView.getStylesheets().add(themeURL.toExternalForm());
@@ -320,121 +303,41 @@ public class PrimaryController {
         }
     }
 
-    public List<TownValues> getValues() {
-        List<TownValues> values = new ArrayList<>();
-        for (Node[] nodes : textFieldsList) {
-            if (namesMenuButton.isSelected()) {
-                if (nodes.length < 4) {
-                    System.out.println("Returning null because nodes.length < 4");
-                    return null;
-                }
-                String townName = ((TextField) nodes[0]).getText();
-                double[] arr = new double[3];
-                for (int i = 0; i < 3; i++) {
-                    if (nodes[i + 1] == null) {
-                        System.out.println("Skipping because nodes[" + (i + 1) + "] is null");
-                        continue;
-                    }
-                    String text = ((TextField) nodes[i + 1]).getText();
-                    if (text.isEmpty()) {
-                        System.out.println("Returning null because text is empty");
-                        return null;
-                    }
-                    arr[i] = Double.parseDouble(text);
-                }
-                values.add(new TownValues(townName, arr));
-            } else {
-                String townName;
-                if (nodes[0] instanceof Label) {
-                    townName = ((Label) nodes[0]).getText();
-                } else if (nodes[0] instanceof TextField) {
-                    townName = ((TextField) nodes[0]).getText();
-                } else {
-                    throw new RuntimeException("Unexpected type: " + nodes[0]);
-                }
-                double[] arr = new double[3];
-                for (int i = 0; i < 3; i++) {
-                    if (nodes[i] == null) {
-                        System.out.println("Skipping because nodes[" + i + "] is null");
-                        continue;
-                    }
-                    String text = ((TextField) nodes[i]).getText();
-                    if (text.isEmpty()) {
-                        System.out.println("Returning null because text is empty");
-                        return null;
-                    }
-                    arr[i] = Double.parseDouble(text);
-                }
-                values.add(new TownValues(townName, arr));
-            }
-        }
-        System.out.println("Returning values: " + values);
-        return values;
-    }
-
-    public List<TicketPrice> getValuesAsTicketPrices() {
-        List<TicketPrice> values = new ArrayList<>();
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            JSONObject jsonObject = new JSONObject(content);
-
-            couchette = jsonObject.getDouble("couchette");
-            sleepClass = jsonObject.getDouble("sleepClass");
-
-            JSONArray tableData = jsonObject.getJSONArray("tableData");
-            for (int i = 0; i < tableData.length(); i++) {
-                JSONObject data = tableData.getJSONObject(i);
-                double fromStation = data.getDouble("fromStation");
-                double toStation = data.getDouble("toStation");
-                double secondClassPrice = data.getDouble("secondClassPrice");
-                double firstClassPrice = data.getDouble("firstClassPrice");             
-                values.add(new TicketPrice(fromStation, toStation, firstClassPrice, secondClassPrice));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return values;
-    }
-
     @FXML
-    private void handleImportButtonAction(ActionEvent event) {
-        filePath = null;
-        getJSONFilePath();
+    public void sumValues() {
+        List<TownValues> values = glob.getValues(textFieldsList, namesMenuButton);
+
+        if (values == null) {
+            glob.showWarningAlert("Warning Dialog", "No Values", "Please fill all fields before proceeding.");
+            return;
+        }
+
+        if (importButton.getText().equals("Import Tariff")) {
+            glob.showWarningAlert("Warning Dialog", "No Tariff Imported", "Please import a tariff before proceeding.");
+            return;
+        }
+    
+        view1.getChildren().clear();
+        view2.getChildren().clear();
+        view3.getChildren().clear();
+        view4.getChildren().clear();
+
+        viewTickets1.getChildren().clear();
+        viewTickets2.getChildren().clear();
+        viewTickets3.getChildren().clear();
+        viewTickets4.getChildren().clear();
+    
+        addLabelsToGrid(view1, viewTickets1, values, glob.CLASS_FIRST_CLASS);
+        addLabelsToGrid(view2, viewTickets2, values, glob.CLASS_SECOND_CLASS);
+        addLabelsToGrid(view3, viewTickets3, values, glob.CLASS_COUCHETTE);
+        addLabelsToGrid(view4, viewTickets4, values, glob.CLASS_SLEEPING);
     }
 
-    private String getJSONFilePath() {       
-        if (filePath != null) {
-            return filePath;
-        }
-    
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-    
-        if (lastOpenedDirectory != null) {
-            fileChooser.setInitialDirectory(lastOpenedDirectory);
-        }
-    
-        File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile != null) {
-            lastOpenedDirectory = selectedFile.getParentFile();
-    
-            String fileName = selectedFile.getName();
-            importButton.setText(fileName.substring(0, fileName.lastIndexOf('.')));
-            filePath = selectedFile.getPath();
-            return filePath;
-        } else {
-            glob.showWarningAlert("Warning Dialog", "No File Selected", "Please select a file before proceeding.");
-            importButton.setText("Import Tariff");
-            return "";
-        }
-    }
 
     @SuppressWarnings("exports")
     public void addLabelsToGrid(GridPane view, GridPane viewTickets, List<TownValues> values, double classes) {
         TicketPrice matchingTicketPrice = null;
-        ticketPrices = getValuesAsTicketPrices();
+        ticketPrices = glob.getValuesAsTicketPrices(filePath, couchette, sleepClass);
         double finalTicketPrice = 0;
         boolean setErrorMesseage = false;
 
@@ -546,14 +449,9 @@ public class PrimaryController {
                     double[] A;
                     double[] B;
 
-
-                        A = values.get(i).getValues();
-                        B = values.get(j).getValues();
-
-                        System.out.println("A: " + Arrays.toString(A));
-                        System.out.println("B: " + Arrays.toString(B));
-                    
-
+                    A = values.get(i).getValues();
+                    B = values.get(j).getValues();
+        
                     if ((A.length < 3 || B.length < 3)) {
                         System.out.println("Error: Each array should have 3 elements.");
                         return;
@@ -571,13 +469,13 @@ public class PrimaryController {
                     double pairResult = ((A[1] + B[1]) / 600000 * (distance / (B[2] - A[2])) * (Integer)fame.getValue() * 1.6) * classes;
                     
                     if (matchingTicketPrice != null) {
-                        if (classes == CLASS_FIRST_CLASS) {
+                        if (classes == glob.CLASS_FIRST_CLASS) {
                             finalTicketPrice = pairResult * matchingTicketPrice.getFirstClassPrice();
-                        } else if (classes == CLASS_SECOND_CLASS) {
+                        } else if (classes == glob.CLASS_SECOND_CLASS) {
                             finalTicketPrice = pairResult * matchingTicketPrice.getSecondClassPrice();
-                        } else if (classes == CLASS_COUCHETTE) {
+                        } else if (classes == glob.CLASS_COUCHETTE) {
                             finalTicketPrice = pairResult * (couchette + matchingTicketPrice.getSecondClassPrice());
-                        } else if (classes == CLASS_SLEEPING) {
+                        } else if (classes == glob.CLASS_SLEEPING) {
                             finalTicketPrice = pairResult * (sleepClass + matchingTicketPrice.getSecondClassPrice());
                         } else {
                             System.out.println("Invalid train class.");
@@ -638,47 +536,45 @@ public class PrimaryController {
         }
     }
 
+    
+    
+   
+    
+    // BUTTONS ACTIONS
+
     @FXML
-    public void sumValues() {
-        List<TownValues> values = getValues();
-
-        //print values
-        for(TownValues value : values) {
-            System.out.println(value.getTownName());
-            for(double val : value.getValues()) {
-                System.out.println(val);
-            }
-        }
-
-        if (values == null) {
-            glob.showWarningAlert("Warning Dialog", "No Values", "Please fill all fields before proceeding.");
-            return;
-        }
-
-        if (importButton.getText().equals("Import Tariff")) {
-            glob.showWarningAlert("Warning Dialog", "No Tariff Imported", "Please import a tariff before proceeding.");
-            return;
-        }
-    
-        view1.getChildren().clear();
-        view2.getChildren().clear();
-        view3.getChildren().clear();
-        view4.getChildren().clear();
-
-        viewTickets1.getChildren().clear();
-        viewTickets2.getChildren().clear();
-        viewTickets3.getChildren().clear();
-        viewTickets4.getChildren().clear();
-    
-        addLabelsToGrid(view1, viewTickets1, values, CLASS_FIRST_CLASS);
-        addLabelsToGrid(view2, viewTickets2, values, CLASS_SECOND_CLASS);
-        addLabelsToGrid(view3, viewTickets3, values, CLASS_COUCHETTE);
-        addLabelsToGrid(view4, viewTickets4, values, CLASS_SLEEPING);
+    private void handleImportButtonAction(ActionEvent event) {
+        filePath = null;
+        getJSONFilePath();
     }
 
+    private String getJSONFilePath() {       
+        if (filePath != null) {
+            return filePath;
+        }
     
-
-    // Menu items
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+    
+        if (lastOpenedDirectory != null) {
+            fileChooser.setInitialDirectory(lastOpenedDirectory);
+        }
+    
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            lastOpenedDirectory = selectedFile.getParentFile();
+    
+            String fileName = selectedFile.getName();
+            importButton.setText(fileName.substring(0, fileName.lastIndexOf('.')));
+            filePath = selectedFile.getPath();
+            return filePath;
+        } else {
+            glob.showWarningAlert("Warning Dialog", "No File Selected", "Please select a file before proceeding.");
+            importButton.setText("Import Tariff");
+            return "";
+        }
+    }
 
     @FXML
     private void handleClearMenuButtonAction(ActionEvent event) {
@@ -695,13 +591,13 @@ public class PrimaryController {
                 Scene scene = new Scene(loader.load());
 
                 Properties props = new Properties();
-                try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+                try (FileInputStream in = new FileInputStream(glob.PREFS_FILE)) {
                     props.load(in);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                String theme = props.getProperty(THEME_PREF_KEY, LIGHT_THEME);
+                String theme = props.getProperty(glob.THEME_PREF_KEY, glob.LIGHT_THEME);
                 URL themeURL = getClass().getResource(theme);
                 if (themeURL != null) {
                     scene.getStylesheets().add(themeURL.toExternalForm());
@@ -730,8 +626,8 @@ public class PrimaryController {
 
     @FXML
     private void handleThemeMenuSwitchAction(ActionEvent event) {
-        URL darkStyle = getClass().getResource(DARK_THEME);
-        URL lightStyle = getClass().getResource(LIGHT_THEME);
+        URL darkStyle = getClass().getResource(glob.DARK_THEME);
+        URL lightStyle = getClass().getResource(glob.LIGHT_THEME);
 
         if (darkStyle == null || lightStyle == null) {
             System.out.println("Could not find one or both of the stylesheets");
@@ -742,25 +638,25 @@ public class PrimaryController {
         String lightStyleExternalForm = lightStyle.toExternalForm();
 
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+        try (FileInputStream in = new FileInputStream(glob.PREFS_FILE)) {
             props.load(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        String currentTheme = props.getProperty(THEME_PREF_KEY, LIGHT_THEME);
+        String currentTheme = props.getProperty(glob.THEME_PREF_KEY, glob.LIGHT_THEME);
 
-        if (currentTheme.equals(DARK_THEME)) {
+        if (currentTheme.equals(glob.DARK_THEME)) {
             mainView.getStylesheets().remove(darkStyleExternalForm);
             mainView.getStylesheets().add(lightStyleExternalForm);
-            props.setProperty(THEME_PREF_KEY, LIGHT_THEME);
+            props.setProperty(glob.THEME_PREF_KEY, glob.LIGHT_THEME);
         } else {
             mainView.getStylesheets().remove(lightStyleExternalForm);
             mainView.getStylesheets().add(darkStyleExternalForm);
-            props.setProperty(THEME_PREF_KEY, DARK_THEME);
+            props.setProperty(glob.THEME_PREF_KEY, glob.DARK_THEME);
         }
 
-        try (FileOutputStream out = new FileOutputStream(PREFS_FILE)) {
+        try (FileOutputStream out = new FileOutputStream(glob.PREFS_FILE)) {
             props.store(out, null);
         } catch (IOException e) {
             e.printStackTrace();
@@ -828,9 +724,9 @@ public class PrimaryController {
     private void handleTownNamesSwitchState() {
         Properties appPrefs = new Properties();
         try {
-            appPrefs.load(new FileInputStream(PREFS_FILE));
-            appPrefs.setProperty(NAMES_PREF_KEY, namesMenuButton.isSelected() ? TOWN_NAMES : LABEL_NAMES);
-            appPrefs.store(new FileOutputStream(PREFS_FILE), null);
+            appPrefs.load(new FileInputStream(glob.PREFS_FILE));
+            appPrefs.setProperty(glob.NAMES_PREF_KEY, namesMenuButton.isSelected() ? glob.TOWN_NAMES : glob.LABEL_NAMES);
+            appPrefs.store(new FileOutputStream(glob.PREFS_FILE), null);
 
             ActionEvent event = new ActionEvent(namesMenuButton, ActionEvent.NULL_SOURCE_TARGET);
             handleClearMenuButtonAction(event);
