@@ -142,7 +142,7 @@ public class SecondaryController {
         if (inputFrom.getText().isEmpty() || inputTo.getText().isEmpty() || 
             inputFirstClass.getText().isEmpty() || inputSecClass.getText().isEmpty()) {
 
-            glob.showWarningAlert("Warning", null, "All fields must be filled!");
+            glob.showWarningAlert("Warning", "Warning", "All fields must be filled!");
         } else {
             // Get the input values
             double from = Double.parseDouble(inputFrom.getText());
@@ -180,7 +180,7 @@ public class SecondaryController {
     @FXML
     public void createJsonFile() {
         if (table.getItems().isEmpty() || inputCouchette.getText().isEmpty() || inputSleepClass.getText().isEmpty()) {
-            glob.showWarningAlert("Warning", null, "Please ensure at least one record is present and both inputs below are filled.");
+            glob.showWarningAlert("Warning", "Warning", "Please ensure at least one record is present and both inputs below are filled.");
             return;
         }
     
@@ -210,7 +210,7 @@ public class SecondaryController {
             try {
                 Files.write(selectedFile.toPath(), jsonObject.toString().getBytes());
 
-                glob.showInformationAlert("Success", null, "JSON file created successfully!");
+                glob.showInformationAlert("Success", "Success", "JSON file created successfully!");
     
                 cancelAndReturn();
             } catch (IOException e) {

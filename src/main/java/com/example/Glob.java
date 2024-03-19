@@ -10,10 +10,13 @@ import org.json.JSONObject;
 
 import javafx.scene.Node;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Glob {
 
@@ -35,6 +38,13 @@ public class Glob {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
+
+        ((Stage)alert.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("styleDark.css").toExternalForm());
+        dialogPane.getStyleClass().add("DialogPane");
+
         alert.showAndWait();
     }
 
@@ -43,14 +53,28 @@ public class Glob {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
+    
+        ((Stage)alert.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
+    
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/com/example/styleDark.css").toExternalForm());
+        dialogPane.getStyleClass().add("DialogPane");
+    
         alert.showAndWait();
     }
-
+    
     public void showErrorAlert(String title, String header, String content) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
+    
+        ((Stage)alert.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
+    
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/com/example/styleDark.css").toExternalForm());
+        dialogPane.getStyleClass().add("DialogPane");
+    
         alert.showAndWait();
     }
     
@@ -172,6 +196,5 @@ public class Glob {
         System.out.println("Returning values: " + values);
         return values;
     }
-
     
 }

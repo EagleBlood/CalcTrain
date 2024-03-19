@@ -45,10 +45,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-public class PrimaryController {
-
-    
-    final int PANE_PADDING = 15;
+public class PrimaryController {  
+    private final int PANE_PADDING = 15;
     
 
     @FXML
@@ -145,10 +143,7 @@ public class PrimaryController {
 
     /*
         TODO - style the alert boxes
-        TODO - add a progress bar / circle to show the progress of the calculation
-        TODO - finish addning towns names to the grid as labels when the namesMenuButton is selected
-        TODO - no problem is rooted deeper, we have the inputs that are taken correctly, adding new records have no issiues with the logic, problem arrise when we switch that damn menu item then it changes the inputs acordingly but for some reason it still remembers what was there before (eg if labels were firstly added and it was switched later to town names it will remember the labels as they were until new records have been added and if towns were first and it was switched back it still remembers the names instead of taking the labels as it is shown in app)
-        TODO - try to keep the namesMenuButton selected when clicked and clear the window somehow
+        TODO - make new calculations, new equations
     */
 
     @SuppressWarnings("unchecked")
@@ -735,5 +730,4 @@ public class PrimaryController {
             e.printStackTrace();
         }
     }
-
 }
