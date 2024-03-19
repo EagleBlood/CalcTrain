@@ -29,7 +29,7 @@
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
                         <items>
-                              <CheckMenuItem fx:id="namesMenuButton" mnemonicParsing="false" text="Town names" />
+                              <CheckMenuItem fx:id="namesMenuButton" mnemonicParsing="false" onAction="#handleTownNamesSwitchState" text="Town names" />
                               <MenuItem fx:id="clearMenuButton" mnemonicParsing="false" onAction="#handleClearMenuButtonAction" text="Clear" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <CheckMenuItem fx:id="hideMenuSwitch" mnemonicParsing="false" onAction="#handleHideMenuSwitchAction" text="Hide menu" />

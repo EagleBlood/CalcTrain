@@ -62,6 +62,10 @@ public class PrimaryController {
     private static final String THEME_PREF_KEY = "theme";
     private static final String DARK_THEME = "styleDark.css";
     private static final String LIGHT_THEME = "style.css";
+
+    private static final String NAMES_PREF_KEY = "names";
+    private static final String LABEL_NAMES = "label";
+    private static final String TOWN_NAMES = "town";
     private static final String PREFS_FILE = "config/app_prefs.properties";
 
     @FXML
@@ -171,19 +175,6 @@ public class PrimaryController {
             SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9, 1);
             fame.setValueFactory(valueFactory);
         }
-    
-        if (input != null) {
-            //addHBox();
-            //addHBox();
-            arrCount.setText(String.valueOf(hboxCount));
-        }
-
-        namesMenuButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            ActionEvent event = new ActionEvent(namesMenuButton, ActionEvent.NULL_SOURCE_TARGET);
-            handleClearMenuButtonAction(event);
-            
-
-        });
 
         // make window draggable
         wholeMenuBar.setOnMousePressed(event -> {
@@ -205,9 +196,11 @@ public class PrimaryController {
             e.printStackTrace();
         }
 
+        String currentNames = props.getProperty(NAMES_PREF_KEY, LABEL_NAMES);
+        namesMenuButton.setSelected(currentNames.equals(TOWN_NAMES));
+
         String currentTheme = props.getProperty(THEME_PREF_KEY, LIGHT_THEME);
         themeMenuSwitch.setSelected(currentTheme.equals(DARK_THEME));
-
 
         // Set the style of the main view
         URL darkStyle = getClass().getResource(DARK_THEME);
@@ -228,6 +221,12 @@ public class PrimaryController {
             mainView.getStylesheets().remove(darkStyleExternalForm);
             mainView.getStylesheets().add(lightStyleExternalForm);
         }
+
+        if (input != null) {
+            addHBox();
+            addHBox();
+            arrCount.setText(String.valueOf(hboxCount));
+        }
     }
     
     @FXML
@@ -239,7 +238,6 @@ public class PrimaryController {
 
         AnchorPane secondaryView = secondaryController.getAnchorPane();
 
-        // Load the current theme from app_prefs.properties
         Properties props = new Properties();
         try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
             props.load(in);
@@ -305,8 +303,6 @@ public class PrimaryController {
 
         input.getChildren().add(hbox);
 
-
-        System.out.println("Size before list append: " + textFields.length);
         textFieldsList.add(textFields);
 
         hboxCount++;
@@ -487,38 +483,47 @@ public class PrimaryController {
     
             for (int j = 0; j < values.size(); j++) {
                 // Column label for view
-                if (i == 0) {
-                    Label columnLabelView = new Label(j + "");
-                    columnLabelView.setMaxWidth(Double.MAX_VALUE);
-                    columnLabelView.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
-                    columnLabelView.setAlignment(Pos.CENTER);
-                    columnLabelView.getStyleClass().add("paneHeaderText");
-    
-                    StackPane columnPaneView = new StackPane(columnLabelView);
-                    columnPaneView.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
-                    columnPaneView.getStyleClass().add("paneHeader");
-    
-                    GridPane.setHalignment(columnPaneView, HPos.CENTER);
-                    GridPane.setValignment(columnPaneView, VPos.CENTER);
-    
-                    view.add(columnPaneView, j + 1, 0);
-    
-                    // Column label for viewTickets
-                    Label columnLabelTickets = new Label(j + "");
-                    columnLabelTickets.setMaxWidth(Double.MAX_VALUE);
-                    columnLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
-                    columnLabelTickets.setAlignment(Pos.CENTER);
-                    columnLabelTickets.getStyleClass().add("paneHeaderText");
-    
-                    StackPane columnPaneTickets = new StackPane(columnLabelTickets);
-                    columnPaneTickets.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
-                    columnPaneTickets.getStyleClass().add("paneHeader");
-    
-                    GridPane.setHalignment(columnPaneTickets, HPos.CENTER);
-                    GridPane.setValignment(columnPaneTickets, VPos.CENTER);
-    
-                    viewTickets.add(columnPaneTickets, j + 1, 0);
+                Label columnLabelView;
+                if (namesMenuButton.isSelected()) {
+                    columnLabelView = new Label(values.get(j).getTownName());
+                } else {
+                    columnLabelView = new Label(j + "");
                 }
+                columnLabelView.setMaxWidth(Double.MAX_VALUE);
+                columnLabelView.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                columnLabelView.setAlignment(Pos.CENTER);
+                columnLabelView.getStyleClass().add("paneHeaderText");
+            
+                StackPane columnPaneView = new StackPane(columnLabelView);
+                columnPaneView.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+                columnPaneView.getStyleClass().add("paneHeader");
+            
+                GridPane.setHalignment(columnPaneView, HPos.CENTER);
+                GridPane.setValignment(columnPaneView, VPos.CENTER);
+            
+                view.add(columnPaneView, j + 1, 0);
+            
+                // Column label for viewTickets
+                Label columnLabelTickets;
+                if (namesMenuButton.isSelected()) {
+                    columnLabelTickets = new Label(values.get(j).getTownName());
+                } else {
+                    columnLabelTickets = new Label(j + "");
+                }
+                columnLabelTickets.setMaxWidth(Double.MAX_VALUE);
+                columnLabelTickets.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+                columnLabelTickets.setAlignment(Pos.CENTER);
+                columnLabelTickets.getStyleClass().add("paneHeaderText");
+            
+                StackPane columnPaneTickets = new StackPane(columnLabelTickets);
+                columnPaneTickets.setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
+                columnPaneTickets.getStyleClass().add("paneHeader");
+            
+                GridPane.setHalignment(columnPaneTickets, HPos.CENTER);
+                GridPane.setValignment(columnPaneTickets, VPos.CENTER);
+            
+                viewTickets.add(columnPaneTickets, j + 1, 0);
+            
 
                 // Label   
                 Label label;
@@ -541,19 +546,16 @@ public class PrimaryController {
                     double[] A;
                     double[] B;
 
-                    if (namesMenuButton.isSelected()) {
-                        A = Arrays.copyOfRange(values.get(i).getValues(), 1, values.get(i).getValues().length);
-                        B = Arrays.copyOfRange(values.get(j).getValues(), 1, values.get(j).getValues().length);
-                    } else {
+
                         A = values.get(i).getValues();
                         B = values.get(j).getValues();
-                    }
 
-                    if (A.length < 3 || B.length < 3 && !namesMenuButton.isSelected()) {
+                        System.out.println("A: " + Arrays.toString(A));
+                        System.out.println("B: " + Arrays.toString(B));
+                    
+
+                    if ((A.length < 3 || B.length < 3)) {
                         System.out.println("Error: Each array should have 3 elements.");
-                        return;
-                    } else if (A.length < 4 || B.length < 4 && namesMenuButton.isSelected()) {
-                        System.out.println("Error: Each array should have 4 elements.");
                         return;
                     }
 
@@ -822,50 +824,20 @@ public class PrimaryController {
         }
     }
 
-    /*public void changeLabelsToInputs(@SuppressWarnings("exports") Pane parentContainer) {
-        List<Node> children = new ArrayList<>(parentContainer.getChildren());
-        for (int i = 0; i < children.size(); i++) {
-            Node child = children.get(i);
-            if (child instanceof HBox) {
-                HBox hbox = (HBox) child;
-                Node firstChild = hbox.getChildren().get(0);
-                if (namesMenuButton.isSelected() && firstChild instanceof Label) {
-                    TextField townNameField = new TextField();
-                    townNameField.setPromptText("Town");
-                    townNameField.getStyleClass().add("appInputFieldMain");
-                    hbox.getChildren().set(0, townNameField);
-                    textFieldsList.get(i)[0] = townNameField; // Update the textFieldsList
-                } else if (!namesMenuButton.isSelected() && firstChild instanceof TextField) {
-                    String labelText = String.valueOf(i % hboxCount) + ".";
-                    Label label = new Label(labelText);
-                    label.setMinWidth(20);
-                    label.setAlignment(Pos.CENTER_LEFT);
-                    label.getStyleClass().add("appTextFieldBold");
-                    hbox.getChildren().set(0, label);
-                    for (int j = 0; j < hboxCount; j++) {
-                        Node[] nodes = new Node[4];
-                        nodes[0] = new TextField();
-                        for (int k = 1; k < 4; k++) {
-                            nodes[j] = new TextField();
-                        }
-                        textFieldsList.add(nodes);
-                    }
-                }
-            }
-        }
-    }
-
-    public void resetWindow() {
+    @FXML
+    private void handleTownNamesSwitchState() {
+        Properties appPrefs = new Properties();
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/primary.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) mainView.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            appPrefs.load(new FileInputStream(PREFS_FILE));
+            appPrefs.setProperty(NAMES_PREF_KEY, namesMenuButton.isSelected() ? TOWN_NAMES : LABEL_NAMES);
+            appPrefs.store(new FileOutputStream(PREFS_FILE), null);
+
+            ActionEvent event = new ActionEvent(namesMenuButton, ActionEvent.NULL_SOURCE_TARGET);
+            handleClearMenuButtonAction(event);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
-
+    }
 
 }
