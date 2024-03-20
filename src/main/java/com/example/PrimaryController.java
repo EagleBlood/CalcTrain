@@ -43,6 +43,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 public class PrimaryController {  
@@ -670,6 +671,8 @@ public class PrimaryController {
         alert.setTitle("About");
         alert.setHeaderText("Price Calculator");
 
+        ((Stage)alert.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
+
         Hyperlink hyperlink = new Hyperlink();
         hyperlink.setText("https://github.com/EagleBlood/CalcTrain");
         hyperlink.setOnAction(e -> {
@@ -683,7 +686,7 @@ public class PrimaryController {
         });
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStyleClass().add("dialog-pane");
+        glob.loadThemeDialog(dialogPane);
         dialogPane.setContent(hyperlink);
 
         alert.showAndWait();
