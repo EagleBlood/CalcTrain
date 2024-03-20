@@ -538,7 +538,7 @@ public class PrimaryController {
     // BUTTONS ACTIONS
 
     @FXML
-    private void handleImportButtonAction(ActionEvent event) {
+    private void handleImportButtonAction() {
         filePath = null;
         getJSONFilePath();
     }
@@ -607,7 +607,7 @@ public class PrimaryController {
     }
 
     @FXML
-    private void handleHideMenuSwitchAction(ActionEvent event) {
+    private void handleHideMenuSwitchAction() {
         if (menu.isVisible()) {
             menu.setVisible(false);
             menu.setManaged(false);
@@ -620,7 +620,7 @@ public class PrimaryController {
     }
 
     @FXML
-    private void handleThemeMenuSwitchAction(ActionEvent event) {
+    private void handleThemeMenuSwitchAction() {
         URL darkStyle = getClass().getResource(glob.DARK_THEME);
         URL lightStyle = getClass().getResource(glob.LIGHT_THEME);
 
@@ -659,13 +659,13 @@ public class PrimaryController {
     }
 
     @FXML
-    private void handleExitMenuButtonAction(ActionEvent event) {
+    private void handleExitMenuButtonAction() {
         Stage stage = (Stage) mainView.getScene().getWindow();
         stage.close();
     }
 
    @FXML
-    private void handleAboutMenuButtonAction(ActionEvent event) {
+    private void handleAboutMenuButtonAction() {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
@@ -693,13 +693,13 @@ public class PrimaryController {
     }
 
     @FXML
-    private void handleMinimizeButtonAction(ActionEvent event) {
+    private void handleMinimizeButtonAction() {
         Stage stage = (Stage) mainView.getScene().getWindow();
         stage.setIconified(true);
     }
 
     @FXML
-    private void handleMaximizeButtonAction(ActionEvent event) {
+    private void handleMaximizeButtonAction() {
         Stage stage = (Stage) mainView.getScene().getWindow();
 
         if (isMaximized) {

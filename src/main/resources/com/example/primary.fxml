@@ -25,6 +25,11 @@
          <children>
             <HBox fx:id="wholeMenuBar">
                <children>
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleMinimizeButtonAction" styleClass="icon-appIconPane">
+                     <graphic>
+                        <Region styleClass="iconAppIcon" />
+                     </graphic>
+                  </Button>
                   <MenuBar fx:id="menuBar">
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
