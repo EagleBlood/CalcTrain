@@ -14,16 +14,16 @@ First, ensure all necessary data for calculations is provided. If you don't have
 
 ![Image1](src/main/resources/img/git/1.PNG)
 
-Once all data has been inputted, click the `Calculate` button to compute the demand and prices.
-
-![Image6](src/main/resources/img/git/6.PNG)
-
 User can choose between menu options to customize usage expereince:
 - `Town names`: Labels can be swapped with custom user-inputted names. When enabled, the user is required to input their chosen town name for better indication in matrices. All variables will be reloaded when used.
 - `Clear`: Clears all added fields.
 - `Hide menu`: Hides the left input menu so matrices can be seen in fullscreen.
 - `Dark mode`: Changes application themes between light and dark mode.
 - `Exit`: Closes program.
+
+![Image6](src/main/resources/img/git/6.PNG)
+
+Once all data has been inputted, click the `Calculate` button to compute the demand and prices.
 
 ![Image2](src/main/resources/img/git/2.PNG)
 

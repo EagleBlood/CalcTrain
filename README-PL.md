@@ -14,16 +14,16 @@ Najpierw upewnij się, że wszystkie niezbędne dane do obliczeń są wpisane. J
 
 ![Image1](src/main/resources/img/git/1.PNG)
 
-Po wprowadzeniu wszystkich danych kliknij przycisk `Calculate`, aby obliczyć zapotrzebowanie i ceny.
-
-![Image6](src/main/resources/img/git/6.PNG)
-
 Użytkownik może wybrać spośród opcji w menu by spersonalizować sposób korzystania z programu:
 - `Town names`: Indeksy można zamienić na niestandardowe nazwy wprowadzane przez użytkownika. Po włączeniu użytkownik musi podać wybraną przez siebie nazwę miasta. Wszystkie zmienne zostaną ponownie załadowane po użyciu.
 - `Clear`: Czyści wszystkie dodane pola.
 - `Hide menu`: Ukrywa lewe menu, aby macierze można było zobaczyć na pełnym ekranie.
 - `Dark mode`: Zmienia motywy aplikacji między jasnym a ciemnym trybem.
 - `Exit`: Zamyka program.
+
+![Image6](src/main/resources/img/git/6.PNG)
+
+Po wprowadzeniu wszystkich danych kliknij przycisk `Calculate`, aby obliczyć zapotrzebowanie i ceny.
 
 ![Image2](src/main/resources/img/git/2.PNG)
 
