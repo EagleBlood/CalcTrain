@@ -1,9 +1,13 @@
 package com.example;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,18 +37,35 @@ public class Glob {
     public final String TOWN_NAMES = "town";
     public final String PREFS_FILE = "config/app_prefs.properties";
 
+    @SuppressWarnings("exports")
+    public void loadThemeDialog(DialogPane dialogPane) {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream(PREFS_FILE)) {
+            props.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        String currentTheme = props.getProperty(THEME_PREF_KEY);
+        URL themeURL = getClass().getResource(currentTheme);
+        if (themeURL != null) {
+            dialogPane.getStylesheets().add(themeURL.toExternalForm());
+        }
+    }
+    
     public void showWarningAlert(String title, String header, String content) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
-
+    
         ((Stage)alert.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
-
+    
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("styleDark.css").toExternalForm());
+        loadThemeDialog(dialogPane);
+    
         dialogPane.getStyleClass().add("DialogPane");
-
+    
         alert.showAndWait();
     }
 
@@ -57,7 +78,8 @@ public class Glob {
         ((Stage)alert.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
     
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/com/example/styleDark.css").toExternalForm());
+        loadThemeDialog(dialogPane);
+
         dialogPane.getStyleClass().add("DialogPane");
     
         alert.showAndWait();
@@ -72,7 +94,8 @@ public class Glob {
         ((Stage)alert.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
     
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/com/example/styleDark.css").toExternalForm());
+        loadThemeDialog(dialogPane);
+        
         dialogPane.getStyleClass().add("DialogPane");
     
         alert.showAndWait();

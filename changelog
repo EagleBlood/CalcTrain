@@ -1,0 +1,6 @@
+- style.css: light mode adjusted (new paint coat)
+- PrimaryControler: code refractored
+- New functions:
+  - town name input added
+  - app icon added
+  - dialogs styles added

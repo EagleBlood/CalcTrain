@@ -142,7 +142,6 @@ public class PrimaryController {
     private Glob glob = new Glob();
 
     /*
-        TODO - style the alert boxes
         TODO - make new calculations, new equations
     */
 

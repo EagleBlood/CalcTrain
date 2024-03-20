@@ -5,42 +5,42 @@
    /*App colors*/
     -app-bg-color: #FAF3F3;
     -app-text-color: #000000; 
-    -app-button-color: #A7BBC7; 
-    -app-button-hover-color: #DA7F8F;
+    -app-button-color: #cccccc; 
+    -app-button-hover-color: #7f9dda;
     -app-button-text-color: #000000;
 
-    -app-input-border-color: #A7BBC7;
+    -app-input-border-color: #000000;
 
-    -app-scroll-bar-color: #A7BBC7;
-    -app-scroll-bar-thumb-color: #E1E5EA;
-    -app-scroll-bar-arrow-color: #E1E5EA;
+    -app-scroll-bar-color: #cccccc;
+    -app-scroll-bar-thumb-color: #FAF3F3;
+    -app-scroll-bar-arrow-color: #000000;
 
     -table-view-cell-border-color: #FAF3F3;
-    -table-view-cell-even-color: #A7BBC7;
-    -table-view-cell-odd-color: #DA7F8F;
+    -table-view-cell-even-color: #cccccc;
+    -table-view-cell-odd-color: #7f9dda;
     -table-view-cell-text-color: #000000;
-    -table-view-cell-header-color: #A7BBC7;
+    -table-view-cell-header-color: #cccccc;
     -table-view-cell-header-text-color: #000000;
-    -table-view-cell-editing-color: #A7BBC7;
+    -table-view-cell-editing-color: #cccccc;
 
-    -app-tab-color: #A7BBC7;
-    -app-tab-selected-color: #DA7F8F;
+    -app-tab-color: #cccccc;
+    -app-tab-selected-color: #7f9dda;
 
-    -pane-color: #DA7F8F;
+    -pane-color: #7f9dda;
     -pane-text-color: #000000;
     -pane-highlight-color: #ff3333;
     -pane-highlight-value-color: #aa0000; 
 
-    -grid-pane-color: #A7BBC7;
+    -grid-pane-color: #cccccc;
     -grid-pane-border-color: #FAF3F3;
 
-    -spinner-bg-color: #A7BBC7;
-    -spinner-arrow-color: #E1E5EA;
+    -spinner-bg-color: #cccccc;
+    -spinner-arrow-color: #000000;
 
     -menu-bg-color: #FAF3F3;
     -menu-border-color: #FAF3F3;
-    -menu-hover-color: #A7BBC7;
-    -menu-hover-danger-color: #E1E5EA;
+    -menu-hover-color: #cccccc;
+    -menu-hover-danger-color: #FAF3F3;
 
     -icon-paint: #000000;
 }
